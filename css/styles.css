@@ -1,0 +1,33 @@
+
+.genric-btn2 {
+    display:inline-block;
+    outline:none;
+    line-height:30px;
+    padding:0 12px;
+    margin-bottom:2px;
+    font-size:.8em;
+    text-align:center;
+    text-decoration:none;
+    font-weight:500;
+    cursor:pointer;
+    -webkit-transition:all 0.3s ease 0s;
+    -moz-transition:all 0.3s ease 0s;
+    -o-transition:all 0.3s ease 0s;
+    transition:all 0.3s ease 0s
+}
+
+.section-top-border2 {
+    display:none;
+    padding:50px 0;
+    border-top:1px dotted #eee
+}
+
+.banner-area2 {
+    padding:150px 0 350px;
+    background-color:#b0b0b0;
+    background-image:url("../template/images/banner-bg.jpg");
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:cover;
+    position:relative
+}
