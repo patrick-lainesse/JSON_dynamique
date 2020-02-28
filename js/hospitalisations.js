@@ -1,8 +1,10 @@
 /*
 Patrick Lainesse
 Matricule 740302
-fichier de scripts pour le tp2 IFT 1142
-Hiver 2020
+IFT 1142, Hiver 2020
+
+hospitalisations.js
+Fichier contenant les tableaux de données pour peupler la page
 */
 
 var tabPatients = [
@@ -39,63 +41,3 @@ var tabHospitalisations = [
     {"etablissement": "4177", "dossier": 3, "admission": [2001, 8, 3], "sortie": [2001, 12, 5], "specialite": "médecine"},
     {"etablissement": "4177", "dossier": 3, "admission": [2002, 2, 2], "sortie": [2002, 2, 23], "specialite": "orthopédie"},
     {"etablissement": "7306", "dossier": 2, "admission": [1998, 5, 23], "sortie": [1998, 5, 27], "specialite": "orthopédie"}];
-
-
-// fonction qui fait apparaître le "X" pour fermer les tableaux
-function afficheX() {
-
-    var bouton = document.getElementById("cadre_tableau");
-    var texte = document.getElementById("texte_pub");
-    bouton.style.display = "inline-block";
-    texte.style.display = "none";
-}
-
-// fonction qui s'exécute quand on sélection l'option "Liste de patients"
-function afficher_patients() {
-
-    afficheX();
-
-    // on vide les balises qui recevront le code du tableau
-    var rangees = document.getElementById('tableau');
-    rangees.innerHTML = "<div class=\"table-head\" id=\"attributs\"></div>";
-
-    var en_tete = document.getElementById('attributs');
-
-    // on affiche les titres de chaque colonne avec le style approprié du template
-    for(attribut in tabPatients[0]) {
-
-        if(attribut == "prenom") {
-            // on ajoute l'accent à prénom
-            attribut = "prénom";
-        }
-        en_tete.innerHTML += "<div class=\"visit\">" + attribut + "</div>";
-    }
-
-    // on affiche les infos de chaque patient
-    for(patient in tabPatients) {
-
-        // renommer la variable texte ou tester sans ????
-        var texte = "";
-
-        texte = "<div class=\"table-row\">";
-        //rangees.innerHTML += "<div class=\"table-row\">";
-
-        tabPat = tabPatients[patient];
-
-        for(attribut in tabPat) {
-
-            if(attribut == "naissance") {
-                texte += "<div class=\"visit\">" + "test" + "</div>";
-                //rangees.innerHTML += "<div class=\"visit\">" + "test" + "</div>";
-            }
-            else {
-                //rangees.innerHTML += "<div class=\"visit\">" + tabPatients[patient][attribut] + "</div>";
-                texte += "<div class=\"visit\">" + tabPat[attribut] + "</div>";
-            }
-        }
-
-        rangees.innerHTML += texte + "</div>";
-    }
-}
-
-// fonction qui réagit au clic sur le X (pour fermer le tableau)????

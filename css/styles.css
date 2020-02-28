@@ -1,33 +1,25 @@
+.arriere_padding {
+    padding:150px 0 20px 0;
+}
 
-.genric-btn2 {
-    display:inline-block;
-    outline:none;
+.boutonX {
     line-height:30px;
     padding:0 12px;
     margin-bottom:2px;
-    font-size:.8em;
-    text-align:center;
-    text-decoration:none;
-    font-weight:500;
-    cursor:pointer;
-    -webkit-transition:all 0.3s ease 0s;
-    -moz-transition:all 0.3s ease 0s;
-    -o-transition:all 0.3s ease 0s;
-    transition:all 0.3s ease 0s
 }
 
-.section-top-border2 {
-    display:none;
-    padding:50px 0;
-    border-top:1px dotted #eee
+.cache {
+    display: none;
+    padding-top: 0;
 }
 
-.banner-area2 {
-    padding:150px 0 350px;
-    background-color:#b0b0b0;
-    background-image:url("../template/images/banner-bg.jpg");
-    background-repeat:no-repeat;
-    background-position:center;
-    background-size:cover;
-    position:relative
+.etat_padding {
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.rangee_padding {
+    padding-left: 10px;
 }

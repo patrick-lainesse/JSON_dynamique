@@ -1,4 +1,18 @@
 <!DOCTYPE html>
+
+<!--
+Page web préparée par: Patrick Lainesse
+Matricule: 740302
+Dans le cadre du cours IFT1142, session H20
+
+Ressources utilisées:
+- Template Colorlib: https://colorlib.com/wp/template/medino/
+
+Les fichiers css et javascript que j'ai modifiés ou créés sont situés dans les dossiers /css et /js.
+Tous les documents provenant du template se retrouvent dans le dossier /template
+-->
+
+
 <html lang="fr">
 <head>
     <!-- Required Meta Tags -->
@@ -49,7 +63,7 @@
                 <div id="logo">
                     <a href="index.html"><img src="template/images/logo/logo.png" alt="" title="" /></a>
                 </div>
-                <nav id="nav-menu-container">
+                <nav id="nav-menu-container"> <!--barre d'outils-->
                     <ul class="nav-menu">
                         <!--<li class="menu-active"><a href="index.html">Accueil</a></li>-->
                         <li><a href="#" onclick="afficher_patients()">Liste de patients</a></li>
@@ -66,7 +80,7 @@
     <!-- Header Area End -->
 
     <!-- Banner Area Starts -->
-    <section class="banner-area2">
+    <section class="banner-area arriere_padding">
         <div class="container">
             <div class="row" id="texte_pub">
                 <div class="col-lg-5">
@@ -77,97 +91,13 @@
                 </div>
             </div>
 
-            <div class="section-top-border2" id="cadre_tableau">
-                <a href="#" class="genric-btn genric-btn2 danger-border radius">X</a>
-
+            <!--section zone d'affichage de la page, où s'affichent dynamiquement les tableaux-->
+            <!--??? doit réagir au clic sur X par Javascript?-->
+            <div class="section-top-border cache" id="cadre_tableau">
+                <a href="index.html" class="genric-btn boutonX danger-border radius">X</a>
                 <div class="progress-table-wrap">
                     <div class="progress-table" id="tableau">
-                        <div class="table-head" id="attributs">
-<!--                            <div class="serial">#</div>
-                            <div class="country">Countries</div>
-                            <div class="visit">Visits</div>
-                            <div class="percentage">Percentages</div>-->
-                        </div>
-                        <!--<div class="table-row">
-                            <div class="serial">01</div>
-                            <div class="country"> <img src="template/images/elements/f1.jpg" alt="flag">Canada</div>
-                            <div class="visit">645032</div>
-                            <div class="percentage">
-                                <div class="progress">
-                                    <div class="progress-bar color-1" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="serial">02</div>
-                            <div class="country"> <img src="template/images/elements/f2.jpg" alt="flag">Canada</div>
-                            <div class="visit">645032</div>
-                            <div class="percentage">
-                                <div class="progress">
-                                    <div class="progress-bar color-2" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="serial">03</div>
-                            <div class="country"> <img src="template/images/elements/f3.jpg" alt="flag">Canada</div>
-                            <div class="visit">645032</div>
-                            <div class="percentage">
-                                <div class="progress">
-                                    <div class="progress-bar color-3" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="serial">04</div>
-                            <div class="country"> <img src="template/images/elements/f4.jpg" alt="flag">Canada</div>
-                            <div class="visit">645032</div>
-                            <div class="percentage">
-                                <div class="progress">
-                                    <div class="progress-bar color-4" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="serial">05</div>
-                            <div class="country"> <img src="template/images/elements/f5.jpg" alt="flag">Canada</div>
-                            <div class="visit">645032</div>
-                            <div class="percentage">
-                                <div class="progress">
-                                    <div class="progress-bar color-5" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="serial">06</div>
-                            <div class="country"> <img src="template/images/elements/f6.jpg" alt="flag">Canada</div>
-                            <div class="visit">645032</div>
-                            <div class="percentage">
-                                <div class="progress">
-                                    <div class="progress-bar color-6" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="serial">07</div>
-                            <div class="country"> <img src="template/images/elements/f7.jpg" alt="flag">Canada</div>
-                            <div class="visit">645032</div>
-                            <div class="percentage">
-                                <div class="progress">
-                                    <div class="progress-bar color-7" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-row">
-                            <div class="serial">08</div>
-                            <div class="country"> <img src="template/images/elements/f8.jpg" alt="flag">Canada</div>
-                            <div class="visit">645032</div>
-                            <div class="percentage">
-                                <div class="progress">
-                                    <div class="progress-bar color-8" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>-->
+                        <div class="table-head rangee_padding" id="attributs"></div>
                     </div>
                 </div>
             </div>
@@ -176,6 +106,19 @@
     </section>
     <!-- Banner Area End -->
 
+    <!-- Hotline Area Starts -->
+    <!--section status de la page, où s'affichent dynamiquement les messages d'erreur ou autres informations-->
+    <section class="hotline-area text-center section-padding etat_padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Zone d'état</h2>
+                    <p class="pt-3 cache" id="status"></p><!--c'est ici que s'affichent les messages, caché par défaut-->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Hotline Area End -->
 
     <!-- Footer Area Starts -->
     <footer class="footer-area section-padding">
@@ -222,6 +165,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="template/js/vendor/superfish.min.js"></script>
     <script src="template/js/main.js"></script>
     <script src="js/hospitalisations.js"></script>
+    <script src="js/scripts.js"></script>
 
 </body>
 </html>
