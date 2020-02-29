@@ -3,6 +3,7 @@
 }
 
 .boutonX {
+    display: table;
     line-height:30px;
     padding:0 12px;
     margin-bottom:2px;
@@ -11,6 +12,10 @@
 .cache {
     display: none;
     padding-top: 0;
+}
+
+.centre {
+    text-align: center;
 }
 
 .etat_padding {
@@ -22,4 +27,16 @@
 
 .rangee_padding {
     padding-left: 10px;
+    font-size: 12px;
+    width: 35%;
+}
+
+.tableau_largeur {
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    .tableau_largeur {
+        min-width: 350px;
+    }
 }

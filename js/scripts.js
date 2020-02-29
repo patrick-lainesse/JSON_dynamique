@@ -20,11 +20,19 @@ function afficheX() {
     texte.style.display = "none";
 }
 
+function montrer_footer() {
+    var div = document.getElementById("footer");
+    div.style.display = "inline-block";
+}
+
 // fonction qui s'exécute quand on sélection l'option "Liste de patients"
 function afficher_patients() {
 
     var status = document.getElementById("status");
     var rangees = document.getElementById('tableau');
+    var conteneur = document.getElementById("conteneur");
+
+    conteneur.classList.add("centre");
 
     // vider les balises qui recevront le code du tableau
     rangees.innerHTML = "<div class=\"table-head\" id=\"attributs\"></div>";
@@ -35,6 +43,7 @@ function afficher_patients() {
 
     // afficher le bouton X pour faire fermer le tableau
     afficheX();
+    //cacher_footer();
 
     // afficher les titres de chaque colonne avec le style approprié du template
     for(attribut in tabPatients[0]) {
@@ -59,7 +68,8 @@ function afficher_patients() {
         for(attribut in tabPat) {
 
             if(attribut === "naissance") {
-                texte += "<div class=\"visit rangee_padding\">" + "test" + "</div>";
+                texte += "<div class=\"visit rangee_padding\">" + tabPat[attribut][0] + "/" + tabPat[attribut][1] + "/" + tabPat[attribut][2] + "</div>";
+                //texte += "<div class=\"visit rangee_padding\">" + "test" + "</div>";
                 //rangees.innerHTML += "<div class=\"visit\">" + "test" + "</div>";
             }
             else {
