@@ -35,7 +35,7 @@ function afficher_patients() {
     conteneur.classList.add("centre");
 
     // vider les balises qui recevront le code du tableau
-    rangees.innerHTML = "<div class=\"table-head\" id=\"attributs\"></div>";
+    rangees.innerHTML = "<div class=\"table-head rangee_padding\" id=\"attributs\"></div>";
 
     // on doit aller chercher l'emplacement de l'en-tête après avoir réinitialisé le code, sinon
     // la référence sera perdue en vidant la balise ayant "attributs" comme id
@@ -61,7 +61,7 @@ function afficher_patients() {
         // renommer la variable texte ou tester sans ????
         //var texte = "";
 
-        var texte = "<div class=\"table-row\">";
+        var texte = "<div class=\"donnees_padding table-row\">";
 
         tabPat = tabPatients[patient];
 

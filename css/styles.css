@@ -18,6 +18,10 @@
     text-align: center;
 }
 
+.donnees_padding {
+    padding: 8px 0 8px 5px !important;
+}
+
 .etat_padding {
     padding: 0;
     position: fixed;
@@ -26,17 +30,32 @@
 }
 
 .rangee_padding {
-    padding-left: 10px;
+    padding-left: 5px;
     font-size: 12px;
-    width: 35%;
 }
 
 .tableau_largeur {
-    text-align: center;
+    text-align: left;
+    padding: 3px 0 70px 0;
+    background: transparent;
+}
+
+div.tableau_largeur>div:nth-of-type(even) {
+    color: #FFF;
+    background:#f8b600;
+}
+
+div.tableau_largeur>div:nth-of-type(odd) {
+    background:#FFF;
 }
 
 @media (max-width: 800px) {
     .tableau_largeur {
         min-width: 350px;
+    }
+
+    .tableau_padding {
+        padding-left: 8px;
+        padding-right: 8px;
     }
 }
