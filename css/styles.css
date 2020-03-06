@@ -33,7 +33,7 @@
 .rangee_padding {
     padding-left: 5px;
     font-size: 12px;
-    white-space:nowrap;
+    /*white-space:nowrap;*/
 }
 
 .tableau_largeur {
