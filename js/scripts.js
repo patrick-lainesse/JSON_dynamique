@@ -36,12 +36,19 @@ function date_mots(annee, mois, jour) {
     return jour + " " + lesMois[mois - 1] + " " + annee;
 }
 
-// fonction qui s'exécute quand on sélection l'option "Liste de patients"
-function afficher_patients() {
+// Fonction qui s'exécute quand on sélectionne une des trois premières options (afficher patients, établissements ou hospitalisations).
+// Elle reçoit comme paramètre l'élément qui a été sélectionné, pour permettre de sélectionner
+// les bonnes informations à afficher.
+function afficher_tableau(elem) {
 
+    // on récupère les endroits de la page html où injecter le tableau
     var status = document.getElementById("status");
-    var rangees = document.getElementById('tableau');
+    var rangees = document.getElementById("tableau");
     var conteneur = document.getElementById("conteneur");
+
+    // variable qui va accueillir le tableau correspondant à la sélection sur la page
+    var tableauJSON;
+    var msgEtat;
 
     conteneur.classList.add("centre");
 
@@ -52,120 +59,87 @@ function afficher_patients() {
     // la référence sera perdue en vidant la balise ayant "attributs" comme id
     var en_tete = document.getElementById('attributs');
 
-    // afficher le bouton X pour faire fermer le tableau et cache la section préparé par si elle est visible
+    // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
     afficheX();
     cacher_footer();
 
+    switch(elem.id) {
+        case "pati":
+            tableauJSON = tabPatients;
+            msgEtat = "patient(s).";
+            break;
+        case "etab":
+            tableauJSON = tabEtablissements;
+            msgEtat = "établissement(s).";
+            break;
+        case "hosp":
+            tableauJSON = tabHospitalisations;
+            msgEtat = "hospitalisation(s).";
+            break;
+    }
+
     // afficher les titres de chaque colonne avec le style approprié du template
-    for(attribut in tabPatients[0]) {
+    // et ajout des accents lorsque nécessaire
+    for(attribut in tableauJSON[0]) {
 
         if(attribut === "prenom") {
-            // ajouter l'accent à prénom
             attribut = "prénom";
         }
-        en_tete.innerHTML += "<div class=\"visit rangee_padding\">" + attribut + "</div>";
-    }
-
-    // afficher les infos de chaque patient
-    for(patient in tabPatients) {
-
-        // renommer la variable texte ou tester sans ????
-        //var texte = "";
-
-        var texte = "<div class=\"donnees_padding table-row\">";
-
-        tabPat = tabPatients[patient];
-
-        for(attribut in tabPat) {
-
-            if(attribut === "naissance") {
-                //texte += "<div class=\"visit rangee_padding\">" + tabPat[attribut][0] + "/" + tabPat[attribut][1] + "/" + tabPat[attribut][2] + "</div>";
-                texte += "<div class=\"visit rangee_padding\">" + date_mots(tabPat[attribut][0], tabPat[attribut][1], tabPat[attribut][2]) + "</div>";
-            }
-            else {
-                //rangees.innerHTML += "<div class=\"visit\">" + tabPatients[patient][attribut] + "</div>";
-                texte += "<div class=\"visit rangee_padding\">" + tabPat[attribut] + "</div>";
-            }
-        }
-
-        // est-ce que j'ai un /div de trop???
-        rangees.innerHTML += texte + "</div>";
-    }
-
-    status.innerHTML = "Il y a " + tabPatients.length + " patients.";
-    status.style.display = "inline-block";
-}
-
-// fonction qui s'exécute quand on sélection l'option "Liste des établissements"  ici???
-function afficher_etablissements() {
-
-    var status = document.getElementById("status");
-    var rangees = document.getElementById('tableau');
-    var conteneur = document.getElementById("conteneur");
-
-    conteneur.classList.add("centre");
-
-    // vider les balises qui recevront le code du tableau
-    rangees.innerHTML = "<div class=\"table-head rangee_padding\" id=\"attributs\"></div>";
-
-    // on doit aller chercher l'emplacement de l'en-tête après avoir réinitialisé le code, sinon
-    // la référence sera perdue en vidant la balise ayant "attributs" comme id
-    var en_tete = document.getElementById('attributs');
-
-    // afficher le bouton X pour faire fermer le tableau et cache la section préparé par si elle est visible
-    afficheX();
-    cacher_footer();
-
-    // afficher les titres de chaque colonne avec le style approprié du template
-    for(attribut in tabEtablissements[0]) { // ici???
-
-        if(attribut === "etablissement") {  // ici???
-            // ajouter l'accent à établissement
+        if(attribut === "etablissement") {
             attribut = "établissement";
         }
 
-        if(attribut === "telephone") {  // ici???
-            // ajouter l'accent à téléphone
+        if(attribut === "telephone") {
             attribut = "téléphone";
+        }
+
+        if(attribut === "specialite") {
+            attribut = "spécialité";
         }
 
         en_tete.innerHTML += "<div class=\"visit rangee_padding\">" + attribut + "</div>";
     }
 
     // afficher les infos de chaque patient
-    for(hopital in tabEtablissements) {       // ici???
+    for(objet in tableauJSON) {
 
         var texte = "<div class=\"donnees_padding table-row\">";
 
-        tabEtab = tabEtablissements[hopital];
+        tabObjet = tableauJSON[objet];
 
-        for(attribut in tabEtab) {
+        for(attribut in tabObjet) {
 
-            if(attribut === "adresse") {
-                texte += "<div class=\"visit rangee_padding\">" + tabEtab[attribut][0] + ", " + tabEtab[attribut][1] + ", " +
-                    tabEtab[attribut][2] + ", " + tabEtab[attribut][3] + "</div>";
+            // change le format de la date pour qu'elle s'affiche en mots
+            if(["naissance", "admission", "sortie"].indexOf(attribut) > -1) {
+                texte += "<div class=\"visit rangee_padding\">" + date_mots(tabObjet[attribut][0], tabObjet[attribut][1], tabObjet[attribut][2]) + "</div>";
+            }
+
+            else if(attribut === "adresse") {
+                texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut][0] + ", " + tabObjet[attribut][1] + ", " +
+                    tabObjet[attribut][2] + ", " + tabObjet[attribut][3] + "</div>";
             }
 
             else if(attribut === "code postal") {
-                texte += "<div class=\"visit rangee_padding\">" + tabEtab[attribut].toString().substring(0, 3) + " " +
-                    tabEtab[attribut].toString().substring(3) + "</div>";
+                texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut].toString().substring(0, 3) + " " +
+                    tabObjet[attribut].toString().substring(3) + "</div>";
             }
 
             else if(attribut === "telephone") {
-                texte += "<div class=\"visit rangee_padding\">(" + tabEtab[attribut].toString().substring(0, 3) + ") " +
-                    tabEtab[attribut].toString().substring(3, 6) + "-" + tabEtab[attribut].toString().substring(6) + "</div>";
+                texte += "<div class=\"visit rangee_padding\">(" + tabObjet[attribut].toString().substring(0, 3) + ") " +
+                    tabObjet[attribut].toString().substring(3, 6) + "-" + tabObjet[attribut].toString().substring(6) + "</div>";
             }
 
             else {
-                //rangees.innerHTML += "<div class=\"visit\">" + tabPatients[patient][attribut] + "</div>";
-                texte += "<div class=\"visit rangee_padding\">" + tabEtab[attribut] + "</div>";
+                texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut] + "</div>";
             }
         }
 
-        // est-ce que j'ai un /div de trop???
-        rangees.innerHTML += texte + "</div>";
+        // est-ce que j'ai un /div de trop??? peut-être.... ????
+        //rangees.innerHTML += texte + "</div>";
+        rangees.innerHTML += texte;
     }
 
-    status.innerHTML = "Il y a " + tabEtablissements.length + " établissements.";
+    // afficher le message d'alert ??? penser à enlever le inline-block quand on clique sur index???
+    status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat;
     status.style.display = "inline-block";
 }

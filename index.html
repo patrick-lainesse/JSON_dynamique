@@ -57,7 +57,7 @@ Tous les documents provenant du template se retrouvent dans le dossier /template
                 </div>
             </div>
         </div>
-        <div id="header" id="home">
+        <div id="header">
             <div class="container">
                 <div class="row align-items-center justify-content-between d-flex">
                 <div id="logo">
@@ -65,9 +65,9 @@ Tous les documents provenant du template se retrouvent dans le dossier /template
                 </div>
                 <nav id="nav-menu-container"> <!--barre d'outils-->
                     <ul class="nav-menu">
-                        <li><a href="#" onclick="afficher_patients()">Liste de patients</a></li>
-                        <li><a href="#" onclick="afficher_etablissements()">Liste des établissements</a></li>
-                        <li><a href="doctors.html">Liste des hospitalisations</a></li>
+                        <li><a href="#" onclick="afficher_tableau(this)" id="pati">Liste de patients</a></li>
+                        <li><a href="#" onclick="afficher_tableau(this)" id="etab">Liste des établissements</a></li>
+                        <li><a href="#" onclick="afficher_tableau(this)" id="hosp">Liste des hospitalisations</a></li>
                         <li class="menu-has-children"><a href="">Hospitalisations<br>par patient</a></li>
                         <li class="menu-has-children"><a href="">Hospitalisations par<br>établissement et par spécialité</a></li>
                     </ul>
