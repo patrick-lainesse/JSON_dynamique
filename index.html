@@ -34,6 +34,7 @@ Tous les documents provenant du template se retrouvent dans le dossier /template
     <link rel="stylesheet" href="template/css/jquery.datetimepicker.min.css">
     <link rel="stylesheet" href="template/css/linearicons.css">
     <link rel="stylesheet" href="template/css/style_template.css">
+    <link rel="stylesheet" href="template/css/nice-select.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -68,8 +69,8 @@ Tous les documents provenant du template se retrouvent dans le dossier /template
                         <li><a href="#" onclick="afficher_tableau(this)" id="pati">Liste de patients</a></li>
                         <li><a href="#" onclick="afficher_tableau(this)" id="etab">Liste des établissements</a></li>
                         <li><a href="#" onclick="afficher_tableau(this)" id="hosp">Liste des hospitalisations</a></li>
-                        <li class="menu-has-children"><a href="">Hospitalisations<br>par patient</a></li>
-                        <li class="menu-has-children"><a href="">Hospitalisations par<br>établissement et par spécialité</a></li>
+                        <li><a href="#" onclick="charger_patient()">Hospitalisations<br>par patient</a></li>
+                        <li><a href="#">Hospitalisations par<br>établissement et par spécialité</a></li>
                     </ul>
                 </nav><!-- #nav-menu-container -->		    		
                 </div>
@@ -89,6 +90,9 @@ Tous les documents provenant du template se retrouvent dans le dossier /template
                     <a href="#prepare_par" class="template-btn mt-3" onclick="montrer_footer()">Préparé par</a>
                 </div>
             </div>
+
+            <div class="cache" id="menuSelect"></div>
+            <!--<div class="cache default-select" id="default-select"></div>-->
 
             <!--section zone d'affichage de la page, où s'affichent dynamiquement les tableaux-->
             <!--??? doit réagir au clic sur X par Javascript?-->

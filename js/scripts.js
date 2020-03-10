@@ -143,3 +143,47 @@ function afficher_tableau(elem) {
     status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat;
     status.style.display = "inline-block";
 }
+
+// fonction qui fait apparaître la liste des patients et leur numéro de dossier
+function charger_patient() {
+
+
+/*<div class="single-element-widget">
+        <h3 class="mb-30 title_color">Selectboxes</h3>
+        <div class="default-select" id="default-select">
+        <select>
+        <option value="1">English</option>
+        <option value="1">Spanish</option>
+        <option value="1">Arabic</option>
+        <option value="1">Portuguise</option>
+        <option value="1">Bengali</option>
+        </select>
+        </div>
+        </div>*/
+
+    var emplacement = document.getElementById("menuSelect");
+    // variable qui recevra le texte d'option à afficher dans le select
+    var texte = "";
+    //emplacement.innerHTML = "<select><option>Chien</option></select>";
+    emplacement.style.display = "inline-block";
+
+    var menu = document.createElement("select");
+    //menu.classList.add("nice-select");
+
+    for(objet in tabPatients) {
+
+        var uneOption = document.createElement("option");
+        uneOption.setAttribute("value", tabPatients[objet].dossier);
+        //texte = "<option>";
+
+        texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
+        //tabObjet = tabPatients[objet];
+
+        var texteOption = document.createTextNode(texte);
+        uneOption.appendChild(texteOption);
+
+        menu.appendChild(uneOption);
+    }
+
+    emplacement.appendChild(menu);
+}
