@@ -4,7 +4,8 @@ Matricule 740302
 IFT 1142, Hiver 2020
 
 hospitalisations.js
-Fichier contenant les tableaux de données pour peupler la page
+Fichier contenant les tableaux de données pour peupler la page. Les fonctions principales se trouvent
+dans le fichier /js/scripts.js
 */
 
 var tabPatients = [
