@@ -12,12 +12,12 @@ Fonctions utilisées pour remplir la zone affichage de la page web
 function afficheX() {
 
     var bouton = document.getElementById("cadre_tableau");
-    var texte = document.getElementById("texte_pub");
+    //var texte = document.getElementById("texte_pub");
     var div = document.getElementById("cadre_tableau");
 
     /*bouton.style.display = "inline-block";
     div.style.display = "inline-block";*/
-    texte.style.display = "none";
+    //texte.style.display = "none";
 
     bouton.style.visibility = "visible";
     div.style.visibility = "visible";
@@ -32,7 +32,8 @@ function montrer_footer() {
 
 function cacher_footer() {
     var div = document.getElementById("footer");
-    //div.style.display = "none";
+    var texte = document.getElementById("texte_pub");
+    texte.style.display = "none";
     div.style.visibility = "hidden";
 }
 
@@ -60,6 +61,7 @@ function afficher_tableau(elem, dossier) {
     // variable qui va accueillir le tableau correspondant à la sélection sur la page
     var tableauJSON;
     var msgEtat;
+    var nombreHosp = 0;     // nombre d'hospitalisations reliées à ce dossier dans le cas de la fonction hospitalisations par patient
 
     conteneur.classList.add("centre");
 
@@ -73,20 +75,19 @@ function afficher_tableau(elem, dossier) {
     // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
     afficheX();
     cacher_footer();
-    cacher_select();
 
     switch(elem) {
         case "pati":
             tableauJSON = tabPatients;
-            msgEtat = "patient(s).";
+            msgEtat = "patient(s)";
             break;
         case "etab":
             tableauJSON = tabEtablissements;
-            msgEtat = "établissement(s).";
+            msgEtat = "établissement(s)";
             break;
         case "hosp":
             tableauJSON = tabHospitalisations;
-            msgEtat = "hospitalisation(s).";
+            msgEtat = "hospitalisation(s)";
             break;
     }
 
@@ -118,6 +119,7 @@ function afficher_tableau(elem, dossier) {
         if(dossier === 0 || dossier === tableauJSON[objet].dossier) {
             var texte = "<div class=\"donnees_padding table-row\">";
 
+            nombreHosp++;           // on compte le nombre d'hospitalisations pour ce no de dossier
             tabObjet = tableauJSON[objet];
 
             for(attribut in tabObjet) {
@@ -154,33 +156,40 @@ function afficher_tableau(elem, dossier) {
 
     }
 
+    // si la fonction n'est pas appelée à partir du select de l'option "hospitalisations par patient"
+    if(dossier === 0) {
+        cacher_select();
+
+        // afficher le message d'alert ??? penser à enlever le inline-block quand on clique sur index???
+        status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat + ".";
+    } else {
+        status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour ce patient.";
+    }
+
     // afficher le message d'alert ??? penser à enlever le inline-block quand on clique sur index???
-    status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat;
-    status.style.display = "inline-block";
+    //status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat;
+    status.style.visibility = "visible";
 }
 
-// fonction qui fait apparaître la liste des patients et leur numéro de dossier
+// fonction qui réagit à l'option "hospitalisations par patient" et qui fait apparaître
+// la liste des patients et leur numéro de dossier
 function charger_patient() {
 
-    var emplacement = document.getElementById("menuSelect");
     // variable qui recevra le texte d'option à afficher dans le select
     var texte = "";
-
+    var emplacement = document.getElementById("menuSelect");
     var table = document.getElementById("cadre_tableau");
-    //emplacement.innerHTML = "<select><option>Chien</option></select>";
-    //emplacement.style.display = "inline-block";
+    var menu = document.getElementById("patients");
+    var status = document.getElementById("status");
+
+    status.innerHTML = "";
+    //status.style.visibility = "invisible";
     emplacement.style.visibility = "visible";
     emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap
 
-    var menu = document.getElementById("patients");
-
-    /*if(typeof(element) != 'undefined' && element != null){
-        alert('Element exists!');
-    } else{
-        alert('Element does not exist!');
-    }
-
-    var menu = document.createElement("select");*/
+    // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
+    cacher_footer();
+    table.style.visibility = "hidden";
 
     if(typeof(menu) == undefined || menu == null) {
         menu = document.createElement("select");
@@ -189,20 +198,12 @@ function charger_patient() {
         menu.setAttribute("onchange", "afficher_patients()");
         //menu.classList.add("nice-select");
 
-        // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
-        cacher_footer();
-        //var table = document.getElementById("cadre_tableau");
-        table.style.visibility = "hidden";
-
-
         for (objet in tabPatients) {
 
             var uneOption = document.createElement("option");
-            uneOption.setAttribute("value", tabPatients[objet].dossier);
-            //texte = "<option>";
+            uneOption.setAttribute("id", tabPatients[objet].dossier);
 
             texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
-            //tabObjet = tabPatients[objet];
 
             var texteOption = document.createTextNode(texte);
             uneOption.appendChild(texteOption);
@@ -212,15 +213,14 @@ function charger_patient() {
 
         emplacement.appendChild(menu);
     }
-
-    else
-    {
-        table.style.visibility = "hidden";
-    }
-
-    //afficher_tableau("pati", 5);
 }
 
 function afficher_patients() {
-    
+
+    // obtenir la référence de l'objet sélectionné
+    var selection = event.target.options[event.target.selectedIndex];
+
+    // afficher le tableau hospitalisation pour le patient sélectionné
+    afficher_tableau("hosp", parseInt(selection.id.toString()));
+    // reste un problème où le select est aligné à gauche au départ et centré quand on y revient une deuxième fois ????
 }
