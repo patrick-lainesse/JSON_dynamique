@@ -15,19 +15,30 @@ function afficheX() {
     var texte = document.getElementById("texte_pub");
     var div = document.getElementById("cadre_tableau");
 
-    bouton.style.display = "inline-block";
-    div.style.display = "inline-block";
+    /*bouton.style.display = "inline-block";
+    div.style.display = "inline-block";*/
     texte.style.display = "none";
+
+    bouton.style.visibility = "visible";
+    div.style.visibility = "visible";
+    //texte.style.visibility = "hidden";
 }
 
 function montrer_footer() {
     var div = document.getElementById("footer");
-    div.style.display = "inline-block";
+    //div.style.display = "inline-block";
+    div.style.visibility = "visible";
 }
 
 function cacher_footer() {
     var div = document.getElementById("footer");
-    div.style.display = "none";
+    //div.style.display = "none";
+    div.style.visibility = "hidden";
+}
+
+function cacher_select() {
+    var div = document.getElementById("menuSelect");
+    div.style.visibility = "hidden";
 }
 
 function date_mots(annee, mois, jour) {
@@ -39,7 +50,7 @@ function date_mots(annee, mois, jour) {
 // Fonction qui s'exécute quand on sélectionne une des trois premières options (afficher patients, établissements ou hospitalisations).
 // Elle reçoit comme paramètre l'élément qui a été sélectionné, pour permettre de sélectionner
 // les bonnes informations à afficher.
-function afficher_tableau(elem) {
+function afficher_tableau(elem, dossier) {
 
     // on récupère les endroits de la page html où injecter le tableau
     var status = document.getElementById("status");
@@ -62,8 +73,9 @@ function afficher_tableau(elem) {
     // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
     afficheX();
     cacher_footer();
+    cacher_select();
 
-    switch(elem.id) {
+    switch(elem) {
         case "pati":
             tableauJSON = tabPatients;
             msgEtat = "patient(s).";
@@ -100,43 +112,46 @@ function afficher_tableau(elem) {
         en_tete.innerHTML += "<div class=\"visit rangee_padding\">" + attribut + "</div>";
     }
 
-    // afficher les infos de chaque patient
+    // afficher les infos de chaque entrée du tableau
     for(objet in tableauJSON) {
 
-        var texte = "<div class=\"donnees_padding table-row\">";
+        if(dossier === 0 || dossier === tableauJSON[objet].dossier) {
+            var texte = "<div class=\"donnees_padding table-row\">";
 
-        tabObjet = tableauJSON[objet];
+            tabObjet = tableauJSON[objet];
 
-        for(attribut in tabObjet) {
+            for(attribut in tabObjet) {
 
-            // change le format de la date pour qu'elle s'affiche en mots
-            if(["naissance", "admission", "sortie"].indexOf(attribut) > -1) {
-                texte += "<div class=\"visit rangee_padding\">" + date_mots(tabObjet[attribut][0], tabObjet[attribut][1], tabObjet[attribut][2]) + "</div>";
+                // change le format de la date pour qu'elle s'affiche en mots
+                if(["naissance", "admission", "sortie"].indexOf(attribut) > -1) {
+                    texte += "<div class=\"visit rangee_padding\">" + date_mots(tabObjet[attribut][0], tabObjet[attribut][1], tabObjet[attribut][2]) + "</div>";
+                }
+
+                else if(attribut === "adresse") {
+                    texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut][0] + ", " + tabObjet[attribut][1] + ", " +
+                        tabObjet[attribut][2] + ", " + tabObjet[attribut][3] + "</div>";
+                }
+
+                else if(attribut === "code postal") {
+                    texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut].toString().substring(0, 3) + " " +
+                        tabObjet[attribut].toString().substring(3) + "</div>";
+                }
+
+                else if(attribut === "telephone") {
+                    texte += "<div class=\"visit rangee_padding\">(" + tabObjet[attribut].toString().substring(0, 3) + ") " +
+                        tabObjet[attribut].toString().substring(3, 6) + "-" + tabObjet[attribut].toString().substring(6) + "</div>";
+                }
+
+                else {
+                    texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut] + "</div>";
+                }
             }
 
-            else if(attribut === "adresse") {
-                texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut][0] + ", " + tabObjet[attribut][1] + ", " +
-                    tabObjet[attribut][2] + ", " + tabObjet[attribut][3] + "</div>";
-            }
-
-            else if(attribut === "code postal") {
-                texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut].toString().substring(0, 3) + " " +
-                    tabObjet[attribut].toString().substring(3) + "</div>";
-            }
-
-            else if(attribut === "telephone") {
-                texte += "<div class=\"visit rangee_padding\">(" + tabObjet[attribut].toString().substring(0, 3) + ") " +
-                    tabObjet[attribut].toString().substring(3, 6) + "-" + tabObjet[attribut].toString().substring(6) + "</div>";
-            }
-
-            else {
-                texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut] + "</div>";
-            }
+            // est-ce que j'ai un /div de trop??? peut-être.... ????
+            //rangees.innerHTML += texte + "</div>";
+            rangees.innerHTML += texte;
         }
 
-        // est-ce que j'ai un /div de trop??? peut-être.... ????
-        //rangees.innerHTML += texte + "</div>";
-        rangees.innerHTML += texte;
     }
 
     // afficher le message d'alert ??? penser à enlever le inline-block quand on clique sur index???
@@ -147,43 +162,65 @@ function afficher_tableau(elem) {
 // fonction qui fait apparaître la liste des patients et leur numéro de dossier
 function charger_patient() {
 
-
-/*<div class="single-element-widget">
-        <h3 class="mb-30 title_color">Selectboxes</h3>
-        <div class="default-select" id="default-select">
-        <select>
-        <option value="1">English</option>
-        <option value="1">Spanish</option>
-        <option value="1">Arabic</option>
-        <option value="1">Portuguise</option>
-        <option value="1">Bengali</option>
-        </select>
-        </div>
-        </div>*/
-
     var emplacement = document.getElementById("menuSelect");
     // variable qui recevra le texte d'option à afficher dans le select
     var texte = "";
+
+    var table = document.getElementById("cadre_tableau");
     //emplacement.innerHTML = "<select><option>Chien</option></select>";
-    emplacement.style.display = "inline-block";
+    //emplacement.style.display = "inline-block";
+    emplacement.style.visibility = "visible";
+    emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap
 
-    var menu = document.createElement("select");
-    //menu.classList.add("nice-select");
+    var menu = document.getElementById("patients");
 
-    for(objet in tabPatients) {
-
-        var uneOption = document.createElement("option");
-        uneOption.setAttribute("value", tabPatients[objet].dossier);
-        //texte = "<option>";
-
-        texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
-        //tabObjet = tabPatients[objet];
-
-        var texteOption = document.createTextNode(texte);
-        uneOption.appendChild(texteOption);
-
-        menu.appendChild(uneOption);
+    /*if(typeof(element) != 'undefined' && element != null){
+        alert('Element exists!');
+    } else{
+        alert('Element does not exist!');
     }
 
-    emplacement.appendChild(menu);
+    var menu = document.createElement("select");*/
+
+    if(typeof(menu) == undefined || menu == null) {
+        menu = document.createElement("select");
+
+        menu.setAttribute("id", "patients");
+        menu.setAttribute("onchange", "afficher_patients()");
+        //menu.classList.add("nice-select");
+
+        // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
+        cacher_footer();
+        //var table = document.getElementById("cadre_tableau");
+        table.style.visibility = "hidden";
+
+
+        for (objet in tabPatients) {
+
+            var uneOption = document.createElement("option");
+            uneOption.setAttribute("value", tabPatients[objet].dossier);
+            //texte = "<option>";
+
+            texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
+            //tabObjet = tabPatients[objet];
+
+            var texteOption = document.createTextNode(texte);
+            uneOption.appendChild(texteOption);
+
+            menu.appendChild(uneOption);
+        }
+
+        emplacement.appendChild(menu);
+    }
+
+    else
+    {
+        table.style.visibility = "hidden";
+    }
+
+    //afficher_tableau("pati", 5);
+}
+
+function afficher_patients() {
+    
 }
