@@ -182,7 +182,8 @@ function charger_patient() {
     var menu = document.getElementById("patients");
     var status = document.getElementById("status");
 
-    status.innerHTML = "";
+    status.innerHTML = "Choisissez un patient pour afficher ses hospitalisations.";
+    status.style.visibility = "visible";
     //status.style.visibility = "invisible";
     emplacement.style.visibility = "visible";
     emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap
@@ -223,4 +224,69 @@ function afficher_patients() {
     // afficher le tableau hospitalisation pour le patient sélectionné
     afficher_tableau("hosp", parseInt(selection.id.toString()));
     // reste un problème où le select est aligné à gauche au départ et centré quand on y revient une deuxième fois ????
+}
+
+function charger_select(identifiant) {
+
+    // variable qui recevra le texte d'option à afficher dans le select
+    var texte = "";
+    var emplacement = document.getElementById("menuSelect");
+    var table = document.getElementById("cadre_tableau");
+    var menu = document.getElementById("patients");
+    var status = document.getElementById("status");
+    var option_barre_outil;
+    var tableau;
+
+    switch(identifiant) {
+        case "hosp_pati":
+            status.innerHTML = "Choisissez un patient pour afficher ses hospitalisations.";
+            option_barre_outil = "patients";
+            tableau = tabPatients;
+            break;
+        case "hosp_etab":
+            status.innerHTML = "Choisissez un établissment pour afficher ses spécialités.";
+            option_barre_outil = "etablissements";
+            tableau = tabEtablissements;
+            break;
+    }
+
+    status.style.visibility = "visible";
+    emplacement.style.visibility = "visible";
+    emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap???
+
+    // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
+    cacher_footer();
+    table.style.visibility = "hidden";
+
+    if(typeof(menu) == undefined || menu == null) {
+        menu = document.createElement("select");
+
+        menu.setAttribute("id", option_barre_outil);
+        menu.setAttribute("onchange", "afficher_patients()");
+        //menu.classList.add("nice-select");        ????
+
+        for (objet in tableau) {
+
+            var uneOption = document.createElement("option");
+
+            switch (option_barre_outil) {
+                case "patients":
+                    uneOption.setAttribute("id", tabPatients[objet].dossier);
+                    texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
+                    break;
+                case "etablissements":
+                    uneOption.setAttribute("id", tabEtablissements[objet].etablissement);
+                    texte = tabEtablissements[objet].etablissement + " - " + tabEtablissements[objet].nom;
+                    break;
+
+            }
+
+            var texteOption = document.createTextNode(texte);
+            uneOption.appendChild(texteOption);
+
+            menu.appendChild(uneOption);
+        }
+
+        emplacement.appendChild(menu);
+    }
 }
