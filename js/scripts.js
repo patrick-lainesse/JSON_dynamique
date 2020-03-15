@@ -232,7 +232,8 @@ function charger_select(identifiant) {
     var texte = "";
     var emplacement = document.getElementById("menuSelect");
     var table = document.getElementById("cadre_tableau");
-    var menu = document.getElementById("patients");
+    var menu;
+    var autre_menu;
     var status = document.getElementById("status");
     var option_barre_outil;
     var tableau;
@@ -242,11 +243,13 @@ function charger_select(identifiant) {
             status.innerHTML = "Choisissez un patient pour afficher ses hospitalisations.";
             option_barre_outil = "patients";
             tableau = tabPatients;
+            autre_menu = document.getElementById("etablissements");
             break;
         case "hosp_etab":
             status.innerHTML = "Choisissez un établissment pour afficher ses spécialités.";
             option_barre_outil = "etablissements";
             tableau = tabEtablissements;
+            autre_menu = document.getElementById("patients");
             break;
     }
 
@@ -258,7 +261,10 @@ function charger_select(identifiant) {
     cacher_footer();
     table.style.visibility = "hidden";
 
+    menu = document.getElementById(option_barre_outil);
+
     if(typeof(menu) == undefined || menu == null) {
+
         menu = document.createElement("select");
 
         menu.setAttribute("id", option_barre_outil);
@@ -289,4 +295,10 @@ function charger_select(identifiant) {
 
         emplacement.appendChild(menu);
     }
+
+    // cacher l'autre menu si présent
+    autre_menu.style.visibility = "invisible";
+    menu.style.visibility = "visible";
 }
+
+// essayer une fonction pour seulement cacher les différents select
