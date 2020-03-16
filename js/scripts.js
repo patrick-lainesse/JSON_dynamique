@@ -39,9 +39,11 @@ function cacher_footer() {
 
 function cacher_select() {
     var div = document.getElementById("menuSelect");
-    div.style.visibility = "hidden";
+    //div.style.visibility = "hidden";
+    div.innerHTML = "";
 }
 
+// fonction pour convertir les dates numériques en dates alphabétiques
 function date_mots(annee, mois, jour) {
 
     var lesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
@@ -93,7 +95,7 @@ function afficher_tableau(elem, dossier) {
 
     // afficher les titres de chaque colonne avec le style approprié du template
     // et ajout des accents lorsque nécessaire
-    for(attribut in tableauJSON[0]) {
+    for(var attribut in tableauJSON[0]) {
 
         if(attribut === "prenom") {
             attribut = "prénom";
@@ -114,7 +116,7 @@ function afficher_tableau(elem, dossier) {
     }
 
     // afficher les infos de chaque entrée du tableau
-    for(objet in tableauJSON) {
+    for(var objet in tableauJSON) {
 
         if(dossier === 0 || dossier === tableauJSON[objet].dossier) {
             var texte = "<div class=\"donnees_padding table-row\">";
@@ -278,87 +280,75 @@ function charger_select(identifiant) {
 
     // on vide le select des spécialités s'il existe déjà
     menu = document.getElementById(option_barre_outil);
-    if(option_barre_outil == "specialites" && menu != null) {
+    if (option_barre_outil === "specialites" && menu != null) {
         menu.innerHTML = "";
-    } else {
+    } else if (menu == null) {
         menu = document.createElement("select");
     }
 
-    //if(typeof(menu) === undefined || menu == null || option_barre_outil === "specialites") {
+    menu.setAttribute("id", option_barre_outil);
+    //menu.classList.add("nice-select");        ????
 
-        //menu = document.createElement("select");
+    switch (option_barre_outil) {
+        case "patients":
+            menu.setAttribute("onchange", "afficher_patients()");
+            break;
+        case "etablissements":
+            menu.setAttribute("onchange", "charger_select(\"specialite\")");
+            break;
+        case "specialites":
+            menu.setAttribute("onchange", "afficher_specialite()");
+    }
 
-        menu.setAttribute("id", option_barre_outil);
-        //menu.classList.add("nice-select");        ????
+    for (objet in tableau) {
+
+        var uneOption = document.createElement("option");
 
         switch (option_barre_outil) {
             case "patients":
-                menu.setAttribute("onchange", "afficher_patients()");
+                uneOption.setAttribute("id", tabPatients[objet].dossier);
+                texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
+                var texteOption = document.createTextNode(texte);
+                uneOption.appendChild(texteOption);
+                menu.appendChild(uneOption);
                 break;
             case "etablissements":
-                menu.setAttribute("onchange", "charger_select(\"specialite\")");
+                uneOption.setAttribute("id", tabEtablissements[objet].etablissement);
+                texte = tabEtablissements[objet].etablissement + " - " + tabEtablissements[objet].nom;
+                var texteOption = document.createTextNode(texte);
+                uneOption.appendChild(texteOption);
+                menu.appendChild(uneOption);
                 break;
             case "specialites":
-                menu.setAttribute("onchange", "afficher_specialite()");
-        }
-
-        for (objet in tableau) {
-
-            var uneOption = document.createElement("option");
-
-            switch (option_barre_outil) {
-                case "patients":
-                    uneOption.setAttribute("id", tabPatients[objet].dossier);
-                    texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
-
+                if (code_etab === tableau[objet].etablissement && !option_existe(tabHospitalisations[objet].specialite, menu)) {
+                    uneOption.setAttribute("id", tabHospitalisations[objet].specialite);
+                    texte = tabHospitalisations[objet].specialite;
                     var texteOption = document.createTextNode(texte);
                     uneOption.appendChild(texteOption);
-
                     menu.appendChild(uneOption);
-                    break;
-                case "etablissements":
-                    uneOption.setAttribute("id", tabEtablissements[objet].etablissement);
-                    texte = tabEtablissements[objet].etablissement + " - " + tabEtablissements[objet].nom;
-
-                    var texteOption = document.createTextNode(texte);
-                    uneOption.appendChild(texteOption);
-
-                    menu.appendChild(uneOption);
-                    break;
-                case "specialites":
-                    if (code_etab == tableau[objet].etablissement && !option_existe(tabHospitalisations[objet].specialite, menu)) {
-                        uneOption.setAttribute("id", tabHospitalisations[objet].specialite);
-                        texte = tabHospitalisations[objet].specialite;
-
-                        var texteOption = document.createTextNode(texte);
-                        uneOption.appendChild(texteOption);
-
-                        menu.appendChild(uneOption);
-                    }
-                    //else texte = "non";
-            }
-
-            /*var texteOption = document.createTextNode(texte);
-            uneOption.appendChild(texteOption);
-
-            menu.appendChild(uneOption);*/
+                }
         }
+    }
 
-        if(menu.length > 0) {
-            emplacement.appendChild(menu);
-        } else {
-            status.innerHTML = "Aucune hospitalisation répertoriée à cet établissement.";
-        }
-
-    //}
+    if(menu.length > 0) {
+        emplacement.appendChild(menu);
+    } else {
+        status.innerHTML = "Aucune hospitalisation répertoriée à cet établissement.";
+    }
 
     // cacher l'autre menu si présent
-    autre_menu.style.visibility = "hidden";
+    if (autre_menu != null) {
+        autre_menu.style.visibility = "hidden";
+    }
     menu.style.visibility = "visible";
-/*
-    if (option_barre_outil == "etablissement") {
-        charger_select("specialite")
-    }*/
+
+    // cacher le menu spécialité pour toutes les autres options
+    if (identifiant != "specialite") {
+        var menu_spec = document.getElementById("specialites");
+        if (menu_spec != null) {
+            menu_spec.style.visibility = "hidden";
+        }
+    }
 }
 
 function afficher_specialite() {
