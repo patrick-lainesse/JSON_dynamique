@@ -58,14 +58,14 @@ function afficher_tableau(elem, dossier) {
     // on récupère les endroits de la page html où injecter le tableau
     var status = document.getElementById("status");
     var rangees = document.getElementById("tableau");
-    var conteneur = document.getElementById("conteneur");
+    //var conteneur = document.getElementById("conteneur");
 
     // variable qui va accueillir le tableau correspondant à la sélection sur la page
     var tableauJSON;
     var msgEtat;
     var nombreHosp = 0;     // nombre d'hospitalisations reliées à ce dossier dans le cas de la fonction hospitalisations par patient
 
-    conteneur.classList.add("centre");
+    //conteneur.classList.add("centre");
 
     // vider les balises qui recevront le code du tableau
     rangees.innerHTML = "<div class=\"table-head rangee_padding\" id=\"attributs\"></div>";
@@ -173,9 +173,7 @@ function afficher_tableau(elem, dossier) {
     status.style.visibility = "visible";
 }
 
-// fonction qui réagit à l'option "hospitalisations par patient" et qui fait apparaître
-// la liste des patients et leur numéro de dossier
-function charger_patient() {
+/*function charger_patient() {
 
     // variable qui recevra le texte d'option à afficher dans le select
     var texte = "";
@@ -216,7 +214,7 @@ function charger_patient() {
 
         emplacement.appendChild(menu);
     }
-}
+}*/
 
 function afficher_patients() {
 
@@ -244,6 +242,9 @@ function charger_select(identifiant) {
     var tableau;
     var menu_etab;
     var code_etab;
+    var conteneur = document.getElementById("conteneur");
+
+    //conteneur.classList.add("centre");
 
     // afficher le message approprié dans la zone status et initialiser les variables
     // correspondant à la sélection opérée sur le menu de la barre d'outils
@@ -320,6 +321,7 @@ function charger_select(identifiant) {
                 menu.appendChild(uneOption);
                 break;
             case "specialites":
+                // possible de mettre ici les code_etab???
                 if (code_etab === tableau[objet].etablissement && !option_existe(tabHospitalisations[objet].specialite, menu)) {
                     uneOption.setAttribute("id", tabHospitalisations[objet].specialite);
                     texte = tabHospitalisations[objet].specialite;
@@ -330,6 +332,7 @@ function charger_select(identifiant) {
         }
     }
 
+    // si le menu ne contient aucun élément, on ne le crée pas??? est-ce que le menu vide s'affiche? à travailler
     if(menu.length > 0) {
         emplacement.appendChild(menu);
     } else {
@@ -352,7 +355,74 @@ function charger_select(identifiant) {
 }
 
 function afficher_specialite() {
-    charger_select("specialite");
+    //charger_select("specialite");
+
+    // on récupère les endroits de la page html où injecter le tableau
+    var status = document.getElementById("status");
+    var rangees = document.getElementById("tableau");
+
+    var menu_hopital = document.getElementById("etablissements").options;
+    var choix_hopital = menu_hopital[menu_hopital.selectedIndex].id;
+    var menu_specialite = document.getElementById("specialites").options;
+    var choix_specialite = menu_specialite[menu_specialite.selectedIndex].id;
+    var texte = "";
+    var nombreHosp = 0;     // nombre d'hospitalisations reliées à cette spécialité
+
+    // vider les balises qui recevront le code du tableau
+    rangees.innerHTML = "<div class=\"table-head rangee_padding\" id=\"attributs\"></div>";
+
+    // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
+    afficheX();
+    cacher_footer();
+
+    // afficher les informations de l'hôpital dans un premier tableau
+    for(var hopital in tabEtablissements) {
+        var test = tabEtablissements[hopital].etablissement;
+        if(choix_hopital == tabEtablissements[hopital].etablissement) {
+
+            texte = texte = "<div class=\"donnees_padding table-row\">";
+            
+            for(var attribut in tabEtablissements[hopital]) {
+
+                if(attribut === "adresse") {
+                    texte += "<div class=\"visit rangee_padding\">" + tabEtablissements[hopital][attribut][0] + ", " + tabEtablissements[hopital][attribut][1] + ", " +
+                        tabEtablissements[hopital][attribut][2] + ", " + tabEtablissements[hopital][attribut][3] + "</div>";
+                }
+
+                else if(attribut === "code postal") {
+                    texte += "<div class=\"visit rangee_padding\">" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + " " +
+                        tabEtablissements[hopital][attribut].toString().substring(3) + "</div>";
+                }
+
+                else if(attribut === "telephone") {
+                    texte += "<div class=\"visit rangee_padding\">(" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + ") " +
+                        tabEtablissements[hopital][attribut].toString().substring(3, 6) + "-" + tabEtablissements[hopital][attribut].toString().substring(6) + "</div>";
+                }
+
+                else {
+                    texte += "<div class=\"visit rangee_padding\">" + tabEtablissements[hopital][attribut] + "</div>";
+                }
+            }
+            rangees.innerHTML += texte;
+            //cacher_select();
+
+        }
+    }
+
+    //var rangees = document.getElementById("tableau");
+    //rangees.innerHTML += texte;
+
+    /*for(var objet in tableauJSON) {
+
+        if(dossier === 0 || dossier === tableauJSON[objet].dossier) {
+            var texte = "<div class=\"donnees_padding table-row\">";
+
+            nombreHosp++;           // on compte le nombre d'hospitalisations pour ce no de dossier
+            tabObjet = tableauJSON[objet];
+
+            for(attribut in tabObjet) {*/
+//texte += "<div class=\"visit rangee_padding\">" + tabObjet[attribut] + "</div>";
+
 }
 
 function option_existe (cherche, menu) {
