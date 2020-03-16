@@ -226,9 +226,11 @@ function afficher_patients() {
     // reste un problème où le select est aligné à gauche au départ et centré quand on y revient une deuxième fois ????
 }
 
+// fonction qui servira à remplir les options de chacun des select s'affichant dynamiquement
 function charger_select(identifiant) {
 
     // variable qui recevra le texte d'option à afficher dans le select
+    // diviser et commenter à quoi vont servir les variables?????
     var texte = "";
     var emplacement = document.getElementById("menuSelect");
     var table = document.getElementById("cadre_tableau");
@@ -236,7 +238,10 @@ function charger_select(identifiant) {
     var autre_menu;
     var status = document.getElementById("status");
     var option_barre_outil;
+    var texteOption;
     var tableau;
+    var menu_etab;
+    var code_etab;
 
     switch(identifiant) {
         case "hosp_pati":
@@ -250,6 +255,14 @@ function charger_select(identifiant) {
             option_barre_outil = "etablissements";
             tableau = tabEtablissements;
             autre_menu = document.getElementById("patients");
+            break;
+        case "specialite":
+            status.innerHTML = "Choisissez une spécialité pour afficher les hospitalisations associées à celle-ci dans cet établissement.";
+            option_barre_outil = "specialites";
+            tableau = tabHospitalisations;
+            autre_menu = document.getElementById("specialites");        // ???? enelever? J'avais modifié pour patients
+            menu_etab = document.getElementById("etablissements").options;
+            code_etab = menu_etab[menu_etab.selectedIndex].id;
             break;
     }
 
@@ -268,8 +281,18 @@ function charger_select(identifiant) {
         menu = document.createElement("select");
 
         menu.setAttribute("id", option_barre_outil);
-        menu.setAttribute("onchange", "afficher_patients()");
         //menu.classList.add("nice-select");        ????
+
+        switch (option_barre_outil) {
+            case "patients":
+                menu.setAttribute("onchange", "afficher_patients()");
+                break;
+            case "etablissements":
+                menu.setAttribute("onchange", "charger_select(\"specialite\")");
+                break;
+            case "specialites":
+                menu.setAttribute("onchange", "afficher_specialite()");
+        }
 
         for (objet in tableau) {
 
@@ -279,26 +302,52 @@ function charger_select(identifiant) {
                 case "patients":
                     uneOption.setAttribute("id", tabPatients[objet].dossier);
                     texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
+
+                    var texteOption = document.createTextNode(texte);
+                    uneOption.appendChild(texteOption);
+
+                    menu.appendChild(uneOption);
                     break;
                 case "etablissements":
                     uneOption.setAttribute("id", tabEtablissements[objet].etablissement);
                     texte = tabEtablissements[objet].etablissement + " - " + tabEtablissements[objet].nom;
-                    break;
 
+                    var texteOption = document.createTextNode(texte);
+                    uneOption.appendChild(texteOption);
+
+                    menu.appendChild(uneOption);
+                    break;
+                case "specialites":
+                    if (code_etab == tableau[objet].etablissement) {
+                        uneOption.setAttribute("id", tabHospitalisations[objet].specialite);
+                        texte = tabHospitalisations[objet].specialite;
+
+                        var texteOption = document.createTextNode(texte);
+                        uneOption.appendChild(texteOption);
+
+                        menu.appendChild(uneOption);
+                    }
+                    //else texte = "non";
             }
 
-            var texteOption = document.createTextNode(texte);
+            /*var texteOption = document.createTextNode(texte);
             uneOption.appendChild(texteOption);
 
-            menu.appendChild(uneOption);
+            menu.appendChild(uneOption);*/
         }
 
         emplacement.appendChild(menu);
     }
 
     // cacher l'autre menu si présent
-    autre_menu.style.visibility = "invisible";
+    autre_menu.style.visibility = "hidden";
     menu.style.visibility = "visible";
+/*
+    if (option_barre_outil == "etablissement") {
+        charger_select("specialite")
+    }*/
 }
 
-// essayer une fonction pour seulement cacher les différents select
+function afficher_specialite() {
+    charger_select("specialite");
+}
