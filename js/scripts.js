@@ -243,6 +243,8 @@ function charger_select(identifiant) {
     var menu_etab;
     var code_etab;
 
+    // afficher le message approprié dans la zone status et initialiser les variables
+    // correspondant à la sélection opérée sur le menu de la barre d'outils
     switch(identifiant) {
         case "hosp_pati":
             status.innerHTML = "Choisissez un patient pour afficher ses hospitalisations.";
@@ -260,7 +262,7 @@ function charger_select(identifiant) {
             status.innerHTML = "Choisissez une spécialité pour afficher les hospitalisations associées à celle-ci dans cet établissement.";
             option_barre_outil = "specialites";
             tableau = tabHospitalisations;
-            autre_menu = document.getElementById("specialites");        // ???? enelever? J'avais modifié pour patients
+            autre_menu = document.getElementById("patients");
             menu_etab = document.getElementById("etablissements").options;
             code_etab = menu_etab[menu_etab.selectedIndex].id;
             break;
@@ -274,11 +276,17 @@ function charger_select(identifiant) {
     cacher_footer();
     table.style.visibility = "hidden";
 
+    // on vide le select des spécialités s'il existe déjà
     menu = document.getElementById(option_barre_outil);
-
-    if(typeof(menu) == undefined || menu == null) {
-
+    if(option_barre_outil == "specialites" && menu != null) {
+        menu.innerHTML = "";
+    } else {
         menu = document.createElement("select");
+    }
+
+    //if(typeof(menu) === undefined || menu == null || option_barre_outil === "specialites") {
+
+        //menu = document.createElement("select");
 
         menu.setAttribute("id", option_barre_outil);
         //menu.classList.add("nice-select");        ????
@@ -318,7 +326,7 @@ function charger_select(identifiant) {
                     menu.appendChild(uneOption);
                     break;
                 case "specialites":
-                    if (code_etab == tableau[objet].etablissement) {
+                    if (code_etab == tableau[objet].etablissement && !option_existe(tabHospitalisations[objet].specialite, menu)) {
                         uneOption.setAttribute("id", tabHospitalisations[objet].specialite);
                         texte = tabHospitalisations[objet].specialite;
 
@@ -336,8 +344,13 @@ function charger_select(identifiant) {
             menu.appendChild(uneOption);*/
         }
 
-        emplacement.appendChild(menu);
-    }
+        if(menu.length > 0) {
+            emplacement.appendChild(menu);
+        } else {
+            status.innerHTML = "Aucune hospitalisation répertoriée à cet établissement.";
+        }
+
+    //}
 
     // cacher l'autre menu si présent
     autre_menu.style.visibility = "hidden";
@@ -350,4 +363,19 @@ function charger_select(identifiant) {
 
 function afficher_specialite() {
     charger_select("specialite");
+}
+
+function option_existe (cherche, menu) {
+    var optionExiste = false,
+        optionsLength = menu.length;
+
+    while (optionsLength--)
+    {
+        if (menu.options[optionsLength].value === cherche)
+        {
+            optionExiste = true;
+            break;
+        }
+    }
+    return optionExiste;
 }
