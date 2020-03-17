@@ -53,6 +53,15 @@ div.tableau_largeur>div:nth-of-type(odd) {
     background:#FFF;
 }
 
+.hopital_specialite {
+    border: solid;
+    background: #000;
+}
+
+.hopital_padding {
+    padding: 0px !important;
+}
+
 @media (max-width: 800px) {
     .tableau_largeur {
         min-width: 350px;

@@ -354,6 +354,7 @@ function charger_select(identifiant) {
     }
 }
 
+// fonction qui réagit à la dernière option de la page Web
 function afficher_specialite() {
     //charger_select("specialite");
 
@@ -368,8 +369,9 @@ function afficher_specialite() {
     var texte = "";
     var nombreHosp = 0;     // nombre d'hospitalisations reliées à cette spécialité
 
-    // vider les balises qui recevront le code du tableau
+    // vider les balises qui recevront le code du tableau et éliminer le background jaune
     rangees.innerHTML = "<div class=\"table-head rangee_padding\" id=\"attributs\"></div>";
+    rangees.classList.remove("tableau_largeur");
 
     // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
     afficheX();
@@ -380,31 +382,31 @@ function afficher_specialite() {
         var test = tabEtablissements[hopital].etablissement;
         if(choix_hopital == tabEtablissements[hopital].etablissement) {
 
-            texte = texte = "<div class=\"donnees_padding table-row\">";
-            
+            texte = texte = "<div class=\"hopital_padding table-row\">";
+
             for(var attribut in tabEtablissements[hopital]) {
 
                 if(attribut === "adresse") {
-                    texte += "<div class=\"visit rangee_padding\">" + tabEtablissements[hopital][attribut][0] + ", " + tabEtablissements[hopital][attribut][1] + ", " +
+                    texte += "<div class=\"visit rangee_padding hopital_specialite\">Adresse:<br>" + tabEtablissements[hopital][attribut][0] + ", " + tabEtablissements[hopital][attribut][1] + ", " +
                         tabEtablissements[hopital][attribut][2] + ", " + tabEtablissements[hopital][attribut][3] + "</div>";
                 }
 
                 else if(attribut === "code postal") {
-                    texte += "<div class=\"visit rangee_padding\">" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + " " +
+                    texte += "<div class=\"visit rangee_padding hopital_specialite\">Code postal:<br>" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + " " +
                         tabEtablissements[hopital][attribut].toString().substring(3) + "</div>";
                 }
 
                 else if(attribut === "telephone") {
-                    texte += "<div class=\"visit rangee_padding\">(" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + ") " +
+                    texte += "<div class=\"visit rangee_padding hopital_specialite\">Téléphone:<br>(" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + ") " +
                         tabEtablissements[hopital][attribut].toString().substring(3, 6) + "-" + tabEtablissements[hopital][attribut].toString().substring(6) + "</div>";
                 }
 
                 else {
-                    texte += "<div class=\"visit rangee_padding\">" + tabEtablissements[hopital][attribut] + "</div>";
+                    texte += "<div class=\"visit rangee_padding hopital_specialite\">" + majuscule(attribut) + ":<br>" + tabEtablissements[hopital][attribut] + "</div>";
                 }
             }
             rangees.innerHTML += texte;
-            //cacher_select();
+            cacher_select();
 
         }
     }
@@ -438,4 +440,8 @@ function option_existe (cherche, menu) {
         }
     }
     return optionExiste;
+}
+
+function majuscule(mot) {
+    return mot.charAt(0).toUpperCase() + mot.substring(1);
 }
