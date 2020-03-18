@@ -379,10 +379,10 @@ function afficher_specialite() {
 
     // afficher les informations de l'hôpital dans un premier tableau
     for(var hopital in tabEtablissements) {
-        var test = tabEtablissements[hopital].etablissement;
+        //var test = tabEtablissements[hopital].etablissement;
         if(choix_hopital == tabEtablissements[hopital].etablissement) {
 
-            texte = texte = "<div class=\"hopital_padding table-row\">";
+            texte = "<div class=\"hopital_padding table-row\">";
 
             for(var attribut in tabEtablissements[hopital]) {
 
@@ -406,8 +406,28 @@ function afficher_specialite() {
                 }
             }
             rangees.innerHTML += texte;
-            cacher_select();
+            texte = "";
 
+            // afficher les informations des hospitalisations reliées à la spécialité choisies
+            for(var lit in tabHospitalisations) {
+
+                if (choix_specialite == tabHospitalisations[lit].specialite) {
+
+                    texte = "<div class=\"hopital_padding table-row\">";
+
+                    for (var attribut in tabHospitalisations[lit]) {             // Il faut aussi compter le nb ??????
+
+                        // change le format de la date pour qu'elle s'affiche en mots
+                        if (["admission", "sortie"].indexOf(attribut) > -1) {
+                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + date_mots(tabHospitalisations[lit][attribut][0], tabHospitalisations[lit][attribut][1], tabHospitalisations[lit][attribut][2]) + "</div>";
+                        } else {
+                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + majuscule(attribut) + ":<br>" + tabHospitalisations[lit][attribut] + "</div>";
+                        }
+                    }
+                    rangees.innerHTML += texte;
+                    cacher_select();
+                }
+            }
         }
     }
 
