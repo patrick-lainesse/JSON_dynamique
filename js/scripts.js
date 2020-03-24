@@ -361,7 +361,7 @@ function afficher_specialite() {
                 }
 
                 else {
-                    texte += "<div class=\"visit rangee_padding hopital_specialite\">" + majuscule(attribut) + ":<br>" + tabEtablissements[hopital][attribut] + "</div>";
+                    texte += "<div class=\"visit rangee_padding hopital_specialite\">" + attribut + ":<br>" + tabEtablissements[hopital][attribut] + "</div>";
                 }
             }
 
@@ -370,13 +370,14 @@ function afficher_specialite() {
             // on réinitialise la variable pour pouvoir la réutiliser
             texte = "";
 
-            // afficher les informations des hospitalisations reliées à la spécialité choisies
+            // afficher dans un tableau les informations des hospitalisations reliées à la spécialité choisies
             for(var lit in tabHospitalisations) {
 
-                // il faut aussi vérifier si le no établissement correspond à la sélection
+                // vérifier si la spécialité et le no d'établissement correspond à la sélection
                 if (choix_specialite == tabHospitalisations[lit].specialite && choix_hopital == tabHospitalisations[lit].etablissement) {
 
                     texte = "<div class=\"hopital_padding table-row\">";
+                    nombreHosp++;
 
                     for (var attributH in tabHospitalisations[lit]) {             // Il faut aussi compter le nb ??????
 
@@ -384,7 +385,7 @@ function afficher_specialite() {
                         if (["admission", "sortie"].indexOf(attributH) > -1) {
                             texte += "<div class=\"visit rangee_padding hopital_specialite\">" + date_mots(tabHospitalisations[lit][attributH][0], tabHospitalisations[lit][attributH][1], tabHospitalisations[lit][attributH][2]) + "</div>";
                         } else {
-                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + majuscule(attributH) + ":<br>" + tabHospitalisations[lit][attributH] + "</div>";
+                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + attributH + ":<br>" + tabHospitalisations[lit][attributH] + "</div>";
                         }
                     }
                     rangees.innerHTML += texte;
@@ -393,6 +394,9 @@ function afficher_specialite() {
             }
         }
     }
+
+    status.innerHTML = nombreHosp;
+    // 7306 orthopédie ne s'affiche pas, pourquoi?????
 
     //var rangees = document.getElementById("tableau");
     //rangees.innerHTML += texte;
@@ -410,13 +414,14 @@ function afficher_specialite() {
 
 }
 
+// vérifie si l'option fournie en paramètre existe dans le menu fourni en paramètre
 function option_existe (cherche, menu) {
     var optionExiste = false,
         optionsLength = menu.length;
 
     while (optionsLength--)
     {
-        if (menu.options[optionsLength].value === cherche)
+        if (menu.options[optionsLength].value.toUpperCase() === cherche.toUpperCase())
         {
             optionExiste = true;
             break;
@@ -425,6 +430,9 @@ function option_existe (cherche, menu) {
     return optionExiste;
 }
 
+// met la première lettre d'un mot en majuscule
 function majuscule(mot) {
     return mot.charAt(0).toUpperCase() + mot.substring(1);
 }
+
+// bug affichage des tableaux quand passe de dernière fonction et retourne à affichage normal ???
