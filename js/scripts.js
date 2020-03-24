@@ -15,21 +15,17 @@ function afficheX() {
     //var texte = document.getElementById("texte_pub");
     var div = document.getElementById("cadre_tableau");
 
-    /*bouton.style.display = "inline-block";
-    div.style.display = "inline-block";*/
-    //texte.style.display = "none";
-
     bouton.style.visibility = "visible";
     div.style.visibility = "visible";
-    //texte.style.visibility = "hidden";
 }
 
+// pour montrer la section "préparé par"
 function montrer_footer() {
     var div = document.getElementById("footer");
-    //div.style.display = "inline-block";
     div.style.visibility = "visible";
 }
 
+// pour cacher la section "préparé par"
 function cacher_footer() {
     var div = document.getElementById("footer");
     var texte = document.getElementById("texte_pub");
@@ -37,9 +33,9 @@ function cacher_footer() {
     div.style.visibility = "hidden";
 }
 
+// pour cacher les select qui ne se rapportent pas à l'option du menu qui a été choisie
 function cacher_select() {
     var div = document.getElementById("menuSelect");
-    //div.style.visibility = "hidden";
     div.innerHTML = "";
 }
 
@@ -50,22 +46,20 @@ function date_mots(annee, mois, jour) {
     return jour + " " + lesMois[mois - 1] + " " + annee;
 }
 
-// Fonction qui s'exécute quand on sélectionne une des trois premières options (afficher patients, établissements ou hospitalisations).
-// Elle reçoit comme paramètre l'élément qui a été sélectionné, pour permettre de sélectionner
-// les bonnes informations à afficher.
+/* Fonction qui s'exécute quand on sélectionne une des quatre premières options (afficher patients, établissements,...).
+Elle reçoit comme paramètre l'élément qui a été sélectionné, pour permettre de sélectionner
+les bonnes informations à afficher. Le deuxième paramètre est le no de dossier du patient à afficher pour l'option
+hospitalisations par patient. Le no de dossier est à 0 pour les trois premières options (afficher les tableaux JSON). */
 function afficher_tableau(elem, dossier) {
 
     // on récupère les endroits de la page html où injecter le tableau
     var status = document.getElementById("status");
     var rangees = document.getElementById("tableau");
-    //var conteneur = document.getElementById("conteneur");
 
     // variable qui va accueillir le tableau correspondant à la sélection sur la page
     var tableauJSON;
     var msgEtat;
     var nombreHosp = 0;     // nombre d'hospitalisations reliées à ce dossier dans le cas de la fonction hospitalisations par patient
-
-    //conteneur.classList.add("centre");
 
     // vider les balises qui recevront le code du tableau
     rangees.innerHTML = "<div class=\"table-head rangee_padding\" id=\"attributs\"></div>";
@@ -78,6 +72,7 @@ function afficher_tableau(elem, dossier) {
     afficheX();
     cacher_footer();
 
+    // sélectionne le tableau JSON corresponsant à la sélection du menu et le message à afficher dans la zone d'état
     switch(elem) {
         case "pati":
             tableauJSON = tabPatients;
@@ -93,7 +88,7 @@ function afficher_tableau(elem, dossier) {
             break;
     }
 
-    // afficher les titres de chaque colonne avec le style approprié du template
+    // afficher les titres de chaque colonne avec le style approprié du template css
     // et ajout des accents lorsque nécessaire
     for(var attribut in tableauJSON[0]) {
 
@@ -122,7 +117,7 @@ function afficher_tableau(elem, dossier) {
             var texte = "<div class=\"donnees_padding table-row\">";
 
             nombreHosp++;           // on compte le nombre d'hospitalisations pour ce no de dossier
-            tabObjet = tableauJSON[objet];
+            var tabObjet = tableauJSON[objet];
 
             for(attribut in tabObjet) {
 
@@ -158,96 +153,39 @@ function afficher_tableau(elem, dossier) {
 
     }
 
-    // si la fonction n'est pas appelée à partir du select de l'option "hospitalisations par patient"
+    // si la fonction n'est pas appelée à partir du select de l'option "hospitalisations par patient", dossier = 0
     if(dossier === 0) {
         cacher_select();
-
-        // afficher le message d'alert ??? penser à enlever le inline-block quand on clique sur index???
+        // afficher le message dans la zone d'état
         status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat + ".";
     } else {
         status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour ce patient.";
     }
 
-    // afficher le message d'alert ??? penser à enlever le inline-block quand on clique sur index???
-    //status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat;
     status.style.visibility = "visible";
 }
 
-/*function charger_patient() {
-
-    // variable qui recevra le texte d'option à afficher dans le select
-    var texte = "";
-    var emplacement = document.getElementById("menuSelect");
-    var table = document.getElementById("cadre_tableau");
-    var menu = document.getElementById("patients");
-    var status = document.getElementById("status");
-
-    status.innerHTML = "Choisissez un patient pour afficher ses hospitalisations.";
-    status.style.visibility = "visible";
-    //status.style.visibility = "invisible";
-    emplacement.style.visibility = "visible";
-    emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap
-
-    // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
-    cacher_footer();
-    table.style.visibility = "hidden";
-
-    if(typeof(menu) == undefined || menu == null) {
-        menu = document.createElement("select");
-
-        menu.setAttribute("id", "patients");
-        menu.setAttribute("onchange", "afficher_patients()");
-        //menu.classList.add("nice-select");
-
-        for (objet in tabPatients) {
-
-            var uneOption = document.createElement("option");
-            uneOption.setAttribute("id", tabPatients[objet].dossier);
-
-            texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
-
-            var texteOption = document.createTextNode(texte);
-            uneOption.appendChild(texteOption);
-
-            menu.appendChild(uneOption);
-        }
-
-        emplacement.appendChild(menu);
-    }
-}*/
-
-function afficher_patients() {
-
-    // obtenir la référence de l'objet sélectionné
-    var selection = event.target.options[event.target.selectedIndex];
-
-    // afficher le tableau hospitalisation pour le patient sélectionné
-    afficher_tableau("hosp", parseInt(selection.id.toString()));
-    // reste un problème où le select est aligné à gauche au départ et centré quand on y revient une deuxième fois ????
-}
-
-// fonction qui servira à remplir les options de chacun des select s'affichant dynamiquement
+/* fonction qui servira à remplir les options de chacun des select s'affichant dynamiquement, ainsi que
+de leur attribuer des fonctions pour réagir aux clics. Reçoit en paramètre le type de select qu'on veut afficher */
 function charger_select(identifiant) {
 
-    // variable qui recevra le texte d'option à afficher dans le select
-    // diviser et commenter à quoi vont servir les variables?????
-    var texte = "";
-    var emplacement = document.getElementById("menuSelect");
-    var table = document.getElementById("cadre_tableau");
-    var menu;
-    var autre_menu;
-    var status = document.getElementById("status");
-    var option_barre_outil;
-    var texteOption;
-    var tableau;
-    var menu_etab;
-    var code_etab;
-    var conteneur = document.getElementById("conteneur");
+    var texte = "";         // recevra le texte d'option à afficher dans le select
+    var emplacement = document.getElementById("menuSelect");    // où seront affichés les select dans la page
+    var table = document.getElementById("cadre_tableau");       // pour cacher les tableaux quand on affiche les select
+    var status = document.getElementById("status");             // section pour afficher les messages
 
-    //conteneur.classList.add("centre");
+    var menu;                        // menu à afficher dans un select
+    var autre_menu;                 // menu qui devra être caché lorsqu'on en affiche un autre
+
+    var option_barre_outil;         // pour attribuer des id aux select dans la page
+    var texteOption;                // texte qui s'affiche dans les select
+    var tableau;                    // tableau JSON dans lequel on va chercher nos valeurs
+
+    //var menu_etab;
+    //var code_etab;
 
     // afficher le message approprié dans la zone status et initialiser les variables
-    // correspondant à la sélection opérée sur le menu de la barre d'outils
+    // correspondant au select que l'on veut afficher
     switch(identifiant) {
         case "hosp_pati":
             status.innerHTML = "Choisissez un patient pour afficher ses hospitalisations.";
@@ -266,20 +204,24 @@ function charger_select(identifiant) {
             option_barre_outil = "specialites";
             tableau = tabHospitalisations;
             autre_menu = document.getElementById("patients");
-            menu_etab = document.getElementById("etablissements").options;
-            code_etab = menu_etab[menu_etab.selectedIndex].id;
+
+            // Récupère l'établissement sélectionné du select de la liste des établissements. Variables non déclarées
+            // plus tôt car elles ne sont pas nécessaires aux deux autres options.
+            var menu_etab = document.getElementById("etablissements").options;
+            var code_etab = menu_etab[menu_etab.selectedIndex].id;
             break;
     }
 
+    // rendre visibles les div où afficher les tableaux s'ils ne l'étaient pas déjà
     status.style.visibility = "visible";
     emplacement.style.visibility = "visible";
     emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap???
 
-    // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
+    // cache la section "préparé par" et cache la section des tableaux si elle est visible
     cacher_footer();
     table.style.visibility = "hidden";
 
-    // on vide le select des spécialités s'il existe déjà
+    // on vide le select des spécialités s'il était déjà affiché
     menu = document.getElementById(option_barre_outil);
     if (option_barre_outil === "specialites" && menu != null) {
         menu.innerHTML = "";
@@ -295,51 +237,56 @@ function charger_select(identifiant) {
             menu.setAttribute("onchange", "afficher_patients()");
             break;
         case "etablissements":
+            // pour cette option, on affiche un deuxième select avec les specialités disponibles à cet établissement
             menu.setAttribute("onchange", "charger_select(\"specialite\")");
             break;
         case "specialites":
             menu.setAttribute("onchange", "afficher_specialite()");
     }
 
-    for (objet in tableau) {
+    // parcourt le tableau JSON correspondant au select qu'on veut remplir et ajoute des options avec un id et un texte correspondant
+    for (var objet in tableau) {
 
         var uneOption = document.createElement("option");
 
         switch (option_barre_outil) {
             case "patients":
                 uneOption.setAttribute("id", tabPatients[objet].dossier);
+                // le texte des options sous le format: 4 (Patrick Lainesse)
                 texte = tabPatients[objet].dossier + " (" + tabPatients[objet].prenom + " " + tabPatients[objet].nom + ")";
-                var texteOption = document.createTextNode(texte);
+                texteOption = document.createTextNode(texte);
                 uneOption.appendChild(texteOption);
                 menu.appendChild(uneOption);
                 break;
             case "etablissements":
                 uneOption.setAttribute("id", tabEtablissements[objet].etablissement);
+                // options sous le format: 1234 - Hôpital Untel
                 texte = tabEtablissements[objet].etablissement + " - " + tabEtablissements[objet].nom;
-                var texteOption = document.createTextNode(texte);
+                texteOption = document.createTextNode(texte);
                 uneOption.appendChild(texteOption);
                 menu.appendChild(uneOption);
                 break;
             case "specialites":
-                // possible de mettre ici les code_etab???
+                // ajoute une spécialité au select seulement si elle ne s'y trouve pas déjà et qu'elle se retrouve dans l'établissement sélectionné
                 if (code_etab === tableau[objet].etablissement && !option_existe(tabHospitalisations[objet].specialite, menu)) {
                     uneOption.setAttribute("id", tabHospitalisations[objet].specialite);
-                    texte = tabHospitalisations[objet].specialite;
-                    var texteOption = document.createTextNode(texte);
+                    texte = majuscule(tabHospitalisations[objet].specialite);
+                    texteOption = document.createTextNode(texte);
                     uneOption.appendChild(texteOption);
                     menu.appendChild(uneOption);
                 }
         }
     }
 
-    // si le menu ne contient aucun élément, on ne le crée pas??? est-ce que le menu vide s'affiche? à travailler
+    // si un menu select ne contient aucun élément, on ne l'affiche pas et on affiche un message d'erreur
     if(menu.length > 0) {
         emplacement.appendChild(menu);
     } else {
         status.innerHTML = "Aucune hospitalisation répertoriée à cet établissement.";
     }
 
-    // cacher l'autre menu si présent
+    /* cacher l'autre menu si présent. Par exemple, on ne veut pas que le menu des patients reste affiché quand on veut
+    afficher le menu des établissements */
     if (autre_menu != null) {
         autre_menu.style.visibility = "hidden";
     }
@@ -354,19 +301,30 @@ function charger_select(identifiant) {
     }
 }
 
-// fonction qui réagit à la dernière option de la page Web
-function afficher_specialite() {
-    //charger_select("specialite");
+// fonction qui réagit à un clic sur une option du select pour afficher les patients par no de dossier
+function afficher_patients() {
 
-    // on récupère les endroits de la page html où injecter le tableau
+    // obtenir la référence de l'objet sélectionné
+    var selection = event.target.options[event.target.selectedIndex];
+
+    // afficher le tableau hospitalisation pour le patient sélectionné
+    afficher_tableau("hosp", parseInt(selection.id.toString()));
+}
+
+// fonction pour traiter Hospitalisations par établissement et par spécialité
+function afficher_specialite() {
+
+    // on récupère les endroits de la page html où injecter les tableaux à afficher
     var status = document.getElementById("status");
     var rangees = document.getElementById("tableau");
 
+    // on récupère les deux menu select et leurs options
     var menu_hopital = document.getElementById("etablissements").options;
     var choix_hopital = menu_hopital[menu_hopital.selectedIndex].id;
     var menu_specialite = document.getElementById("specialites").options;
     var choix_specialite = menu_specialite[menu_specialite.selectedIndex].id;
-    var texte = "";
+
+    var texte = "";         // recevra le code html pour afficher les tableaux
     var nombreHosp = 0;     // nombre d'hospitalisations reliées à cette spécialité
 
     // vider les balises qui recevront le code du tableau et éliminer le background jaune
@@ -377,9 +335,10 @@ function afficher_specialite() {
     afficheX();
     cacher_footer();
 
-    // afficher les informations de l'hôpital dans un premier tableau
+    // parcourt le tableau JSON pour afficher les informations de l'hôpital sélectionné dans un premier tableau
     for(var hopital in tabEtablissements) {
-        //var test = tabEtablissements[hopital].etablissement;
+
+        // si l'option sélectionnée correspondant à cette ligne du tableauJSON
         if(choix_hopital == tabEtablissements[hopital].etablissement) {
 
             texte = "<div class=\"hopital_padding table-row\">";
@@ -405,23 +364,27 @@ function afficher_specialite() {
                     texte += "<div class=\"visit rangee_padding hopital_specialite\">" + majuscule(attribut) + ":<br>" + tabEtablissements[hopital][attribut] + "</div>";
                 }
             }
+
+            // on injecte le code HTML dans la page
             rangees.innerHTML += texte;
+            // on réinitialise la variable pour pouvoir la réutiliser
             texte = "";
 
             // afficher les informations des hospitalisations reliées à la spécialité choisies
             for(var lit in tabHospitalisations) {
 
+                // ??? problème ici : choix spécialite comporte des accents, et il faut aussi vérifier si le no établissement correspond à la sélection
                 if (choix_specialite == tabHospitalisations[lit].specialite) {
 
                     texte = "<div class=\"hopital_padding table-row\">";
 
-                    for (var attribut in tabHospitalisations[lit]) {             // Il faut aussi compter le nb ??????
+                    for (var attributH in tabHospitalisations[lit]) {             // Il faut aussi compter le nb ??????
 
                         // change le format de la date pour qu'elle s'affiche en mots
-                        if (["admission", "sortie"].indexOf(attribut) > -1) {
-                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + date_mots(tabHospitalisations[lit][attribut][0], tabHospitalisations[lit][attribut][1], tabHospitalisations[lit][attribut][2]) + "</div>";
+                        if (["admission", "sortie"].indexOf(attributH) > -1) {
+                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + date_mots(tabHospitalisations[lit][attributH][0], tabHospitalisations[lit][attributH][1], tabHospitalisations[lit][attributH][2]) + "</div>";
                         } else {
-                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + majuscule(attribut) + ":<br>" + tabHospitalisations[lit][attribut] + "</div>";
+                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + majuscule(attributH) + ":<br>" + tabHospitalisations[lit][attributH] + "</div>";
                         }
                     }
                     rangees.innerHTML += texte;
