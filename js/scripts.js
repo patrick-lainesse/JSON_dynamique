@@ -338,7 +338,7 @@ function afficher_specialite() {
     // parcourt le tableau JSON pour afficher les informations de l'hôpital sélectionné dans un premier tableau
     for(var hopital in tabEtablissements) {
 
-        // si l'option sélectionnée correspondant à cette ligne du tableauJSON
+        // si l'option sélectionnée correspondant à cette ligne du tableauJSON, on remplit une ligne de tableau pour afficher les infos de l'établissement sélectionné
         if(choix_hopital == tabEtablissements[hopital].etablissement) {
 
             texte = "<div class=\"hopital_padding table-row\">";
@@ -365,16 +365,16 @@ function afficher_specialite() {
                 }
             }
 
-            // on injecte le code HTML dans la page
-            rangees.innerHTML += texte;
+            // on injecte le code HTML dans la page ??? fonctionne pas br
+            rangees.innerHTML += texte + "<br>";
             // on réinitialise la variable pour pouvoir la réutiliser
             texte = "";
 
             // afficher les informations des hospitalisations reliées à la spécialité choisies
             for(var lit in tabHospitalisations) {
 
-                // ??? problème ici : choix spécialite comporte des accents, et il faut aussi vérifier si le no établissement correspond à la sélection
-                if (choix_specialite == tabHospitalisations[lit].specialite) {
+                // il faut aussi vérifier si le no établissement correspond à la sélection
+                if (choix_specialite == tabHospitalisations[lit].specialite && choix_hopital == tabHospitalisations[lit].etablissement) {
 
                     texte = "<div class=\"hopital_padding table-row\">";
 
