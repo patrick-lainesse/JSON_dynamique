@@ -319,6 +319,8 @@ function afficher_specialite() {
     // on récupère les endroits de la page html où injecter les tableaux à afficher
     var status = document.getElementById("status");
     var rangees = document.getElementById("tableau");
+    var cadre = document.getElementById("cadre_tableau");
+    var boutonFermer = document.getElementById("boutonX");
 
     // on récupère les deux menu select et leurs options
     var menu_hopital = document.getElementById("etablissements").options;
@@ -330,12 +332,27 @@ function afficher_specialite() {
     var nombreHosp = 0;     // nombre d'hospitalisations reliées à cette spécialité
 
     // vider les balises qui recevront le code du tableau et éliminer le background jaune
-    rangees.innerHTML = "<div class=\"table-head rangee_padding\" id=\"attributs\"></div>";
-    rangees.classList.remove("tableau_largeur");
+    /*rangees.innerHTML = "<div class=\"table-head rangee_padding\" id=\"attributs\"></div>";
+    rangees.classList.remove("tableau_largeur");*/
 
     // afficher le bouton X pour faire fermer le tableau et cache la section "préparé par" si elle est visible
     afficheX();
     cacher_footer();
+
+
+/*<section class="button-area">
+        <div class="container border-top-generic">
+        <h3 class="text-heading title_color">Sample Buttons</h3>
+    <div class="button-group-area">
+
+        <a href="#" class="genric-btn info">Info</a>
+        <a href="#" class="genric-btn warning">Warning</a>
+    </div>
+    </div>
+    </section>*/
+
+    var infosHopital = document.createElement("div");
+    infosHopital.setAttribute("class", "container border-top-generic");
 
     // parcourt le tableau JSON pour afficher les informations de l'hôpital sélectionné dans un premier tableau
     for(var hopital in tabEtablissements) {
@@ -343,32 +360,45 @@ function afficher_specialite() {
         // si l'option sélectionnée correspondant à cette ligne du tableauJSON, on remplit une ligne de tableau pour afficher les infos de l'établissement sélectionné
         if(choix_hopital == tabEtablissements[hopital].etablissement) {
 
-            texte = "<div class=\"hopital_padding table-row\">";
+            //texte = "<div class=\"hopital_padding table-row\">";
+            //texte = "<div class=\"container border-top-generic\"><div class=\"button-group-area\">";
+            texte = "<div class=\"button-group-area\">";
 
             for(var attribut in tabEtablissements[hopital]) {
 
                 if(attribut === "adresse") {
-                    texte += "<div class=\"visit rangee_padding hopital_specialite\">Adresse:<br>" + tabEtablissements[hopital][attribut][0] + ", " + tabEtablissements[hopital][attribut][1] + ", " +
-                        tabEtablissements[hopital][attribut][2] + ", " + tabEtablissements[hopital][attribut][3] + "</div>";
+                    //texte += "<div class=\"visit rangee_padding hopital_specialite\">Adresse:<br>" + tabEtablissements[hopital][attribut][0] + ", " + tabEtablissements[hopital][attribut][1] + ", " +
+                    //    tabEtablissements[hopital][attribut][2] + ", " + tabEtablissements[hopital][attribut][3] + "</div>";
+                    texte += "<a href=\"#\" class=\"genric-btn danger\">Adresse:<br>" + tabEtablissements[hopital][attribut][0] + ", " + tabEtablissements[hopital][attribut][1] + ", " +
+                        tabEtablissements[hopital][attribut][2] + ", " + tabEtablissements[hopital][attribut][3] + "</a>";
                 }
 
                 else if(attribut === "code postal") {
-                    texte += "<div class=\"visit rangee_padding hopital_specialite\">Code postal:<br>" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + " " +
-                        tabEtablissements[hopital][attribut].toString().substring(3) + "</div>";
+                    /*texte += "<div class=\"visit rangee_padding hopital_specialite\">Code postal:<br>" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + " " +
+                        tabEtablissements[hopital][attribut].toString().substring(3) + "</div>";*/
+                    texte += "<a href=\"#\" class=\"genric-btn danger\">Code postal:<br>" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + " " +
+                        tabEtablissements[hopital][attribut].toString().substring(3) + "</a>";
                 }
 
                 else if(attribut === "telephone") {
-                    texte += "<div class=\"visit rangee_padding hopital_specialite\">Téléphone:<br>(" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + ") " +
-                        tabEtablissements[hopital][attribut].toString().substring(3, 6) + "-" + tabEtablissements[hopital][attribut].toString().substring(6) + "</div>";
+                    /*texte += "<div class=\"visit rangee_padding hopital_specialite\">Téléphone:<br>(" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + ") " +
+                        tabEtablissements[hopital][attribut].toString().substring(3, 6) + "-" + tabEtablissements[hopital][attribut].toString().substring(6) + "</div>";*/
+                    texte += "<a href=\"#\" class=\"genric-btn danger\">Téléphone:<br>(" + tabEtablissements[hopital][attribut].toString().substring(0, 3) + ") " +
+                        tabEtablissements[hopital][attribut].toString().substring(3, 6) + "-" + tabEtablissements[hopital][attribut].toString().substring(6) + "</a>";
                 }
 
                 else {
-                    texte += "<div class=\"visit rangee_padding hopital_specialite\">" + attribut + ":<br>" + tabEtablissements[hopital][attribut] + "</div>";
+                    //texte += "<div class=\"visit rangee_padding hopital_specialite\">" + attribut + ":<br>" + tabEtablissements[hopital][attribut] + "</div>";
+                    texte += "<a href=\"#\" class=\"genric-btn danger\">" + majuscule(attribut) + ":<br>" + tabEtablissements[hopital][attribut] + "</a>";
                 }
             }
 
+            texte += "</div>";
+            infosHopital.innerHTML += texte;
+
             // on injecte le code HTML dans la page ??? fonctionne pas br enlever????
-            rangees.innerHTML += texte;
+            //rangees.innerHTML += texte + "</div></div>";
+            cadre.insertBefore(infosHopital, boutonFermer);
 
             // on ajoute un deuxième tableau on réinitialise la variable pour pouvoir la réutiliser
             texte = "<div class=\"progress-table\">";
