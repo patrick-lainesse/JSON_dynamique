@@ -62,6 +62,10 @@ div.tableau_largeur>div:nth-of-type(odd) {
     padding: 0px !important;
 }
 
+.hospitalisation_margin {
+    margin: 65px;
+}
+
 @media (max-width: 800px) {
     .tableau_largeur {
         min-width: 350px;

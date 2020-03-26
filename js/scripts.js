@@ -7,6 +7,8 @@ scripts.js
 Fonctions utilisées pour remplir la zone affichage de la page web
 */
 
+// déclarer ici en variables globales des variables pour le format d'un tableau à afficher dans la page
+// faire pareil pour le select en bootstrap??????
 
 // fonction qui fait apparaître le "X" pour fermer les tableaux
 function afficheX() {
@@ -365,10 +367,29 @@ function afficher_specialite() {
                 }
             }
 
-            // on injecte le code HTML dans la page ??? fonctionne pas br
-            rangees.innerHTML += texte + "<br>";
-            // on réinitialise la variable pour pouvoir la réutiliser
+            // on injecte le code HTML dans la page ??? fonctionne pas br enlever????
+            rangees.innerHTML += texte;
+
+            // on ajoute un deuxième tableau on réinitialise la variable pour pouvoir la réutiliser
+            texte = "<div class=\"progress-table\">";
+            rangees.innerHTML += texte;
             texte = "";
+
+            // insérer l'en-tête du tableau
+            for(var colonne in tabHospitalisations[0]) {
+
+                // afficher les titres de chaque colonne avec le style approprié du template css
+                // et ajout des accents lorsque nécessaire
+                if(colonne === "etablissement") {
+                    colonne = "établissement";
+                }
+                if(colonne === "specialite") {
+                    colonne = "spécialité";
+                }
+
+                texte += "<div class=\"visit rangee_padding\">" + colonne + "</div>";
+            }
+            rangees.innerHTML += texte;
 
             // afficher dans un tableau les informations des hospitalisations reliées à la spécialité choisies
             for(var lit in tabHospitalisations) {
@@ -376,19 +397,20 @@ function afficher_specialite() {
                 // vérifier si la spécialité et le no d'établissement correspond à la sélection
                 if (choix_specialite == tabHospitalisations[lit].specialite && choix_hopital == tabHospitalisations[lit].etablissement) {
 
-                    texte = "<div class=\"hopital_padding table-row\">";
+                    texte = "<div class=\"hopital_padding hospitalisation_margin table-row\">";
+                    //texte = "<div class=\"visit rangee_padding\">" + attribut + "</div>";
                     nombreHosp++;
 
                     for (var attributH in tabHospitalisations[lit]) {             // Il faut aussi compter le nb ??????
 
                         // change le format de la date pour qu'elle s'affiche en mots
                         if (["admission", "sortie"].indexOf(attributH) > -1) {
-                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + date_mots(tabHospitalisations[lit][attributH][0], tabHospitalisations[lit][attributH][1], tabHospitalisations[lit][attributH][2]) + "</div>";
+                            texte += "<div class=\"visit rangee_padding\">" + date_mots(tabHospitalisations[lit][attributH][0], tabHospitalisations[lit][attributH][1], tabHospitalisations[lit][attributH][2]) + "</div>";
                         } else {
-                            texte += "<div class=\"visit rangee_padding hopital_specialite\">" + attributH + ":<br>" + tabHospitalisations[lit][attributH] + "</div>";
+                            texte += "<div class=\"visit rangee_padding\">" + attributH + ":<br>" + tabHospitalisations[lit][attributH] + "</div>";
                         }
                     }
-                    rangees.innerHTML += texte;
+                    rangees.innerHTML += texte + "</div>";
                     cacher_select();
                 }
             }
