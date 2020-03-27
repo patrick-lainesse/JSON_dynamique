@@ -181,8 +181,8 @@ function afficher_tableau(elem, dossier, codeEtab, spec) {
         status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour ce patient.";
     }
 
-    if(tableauJSON.length == 0 || nombreHosp ==0) {
-        cadre.style.visibility = "gone";        // ???? ici à régler
+    if(tableauJSON.length === 0 || nombreHosp === 0) {
+        cadre.style.visibility = "hidden";        // ???? ici à régler
     }
 
     status.style.visibility = "visible";
@@ -236,7 +236,20 @@ function charger_select(identifiant) {
     // rendre visibles les div où afficher les tableaux s'ils ne l'étaient pas déjà
     status.style.visibility = "visible";
     emplacement.style.visibility = "visible";
-    emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap???
+    //emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap???
+    emplacement.setAttribute("class", "default-select");
+
+
+    /*<div class="default-select" id="default-select">      ???
+        <select>
+        <option value="1">English</option>
+        <option value="1">Spanish</option>
+        <option value="1">Arabic</option>
+        <option value="1">Portuguise</option>
+        <option value="1">Bengali</option>
+        </select>
+        </div>*/
+
 
     // cache la section "préparé par" et cache la section des tableaux si elle est visible
     cacher_footer();
@@ -324,16 +337,23 @@ function charger_select(identifiant) {
             menu_spec.style.visibility = "hidden";
         }
     }
+
+    $('select').niceSelect();
 }
 
 // fonction qui réagit à un clic sur une option du select pour afficher les patients par no de dossier
 function afficher_patients() {
 
     // obtenir la référence de l'objet sélectionné
-    var selection = event.target.options[event.target.selectedIndex];
+    var menu_patient = document.getElementById("patients").options;
+    var selection = menu_patient[menu_patient.selectedIndex].id;
+
+
+    //var selection = event.target.options[event.target.selectedIndex];
 
     // afficher le tableau hospitalisation pour le patient sélectionné
-    afficher_tableau("hosp", parseInt(selection.id.toString()), 0);
+    //afficher_tableau("hosp", parseInt(selection.id.toString()), 0);
+    afficher_tableau("hosp", parseInt(selection.id), 0);    // ????
 }
 
 /* Fonction pour traiter Hospitalisations par établissement et par spécialité. Affiche les informations de l'établissement
