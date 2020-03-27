@@ -35,6 +35,13 @@ function cacher_footer() {
     div.style.visibility = "hidden";
 }
 
+function cacher_etab() {
+    var infosH = document.getElementById("infosHopital");
+    if(infosH != null) {
+        infosH.parentNode.removeChild(infosH);
+    }
+}
+
 // pour cacher les select qui ne se rapportent pas à l'option du menu qui a été choisie
 function cacher_select() {
     var div = document.getElementById("menuSelect");
@@ -52,11 +59,12 @@ function date_mots(annee, mois, jour) {
 Elle reçoit comme paramètre l'élément qui a été sélectionné, pour permettre de sélectionner
 les bonnes informations à afficher. Le deuxième paramètre est le no de dossier du patient à afficher pour l'option
 hospitalisations par patient. Le no de dossier est à 0 pour les trois premières options (afficher les tableaux JSON). */
-function afficher_tableau(elem, dossier) {
+function afficher_tableau(elem, dossier, codeEtab, spec) {
 
     // on récupère les endroits de la page html où injecter le tableau
     var status = document.getElementById("status");
     var rangees = document.getElementById("tableau");
+    //var etabSpecialite = document.getElementById("infosHopital");
 
     // variable qui va accueillir le tableau correspondant à la sélection sur la page
     var tableauJSON;
@@ -79,14 +87,26 @@ function afficher_tableau(elem, dossier) {
         case "pati":
             tableauJSON = tabPatients;
             msgEtat = "patient(s)";
+            cacher_etab();
             break;
         case "etab":
             tableauJSON = tabEtablissements;
             msgEtat = "établissement(s)";
+            cacher_etab();
             break;
         case "hosp":
             tableauJSON = tabHospitalisations;
             msgEtat = "hospitalisation(s)";
+            cacher_etab();
+            break;
+// dne fonction ???
+        case "hosp_spec":
+            var cadre = document.getElementById("cadre_tableau");
+            var boutonFermer = document.getElementById("boutonX");
+            tableauJSON = tabHospitalisations;
+            msgEtat = "hospitalisation(s)";
+            cadre.insertBefore(infosHopital, boutonFermer);
+            cacher_select();
             break;
     }
 
@@ -115,7 +135,7 @@ function afficher_tableau(elem, dossier) {
     // afficher les infos de chaque entrée du tableau
     for(var objet in tableauJSON) {
 
-        if(dossier === 0 || dossier === tableauJSON[objet].dossier) {
+        if(dossier === 0 || dossier === tableauJSON[objet].dossier || (codeEtab === tableauJSON[objet].etablissement && spec === tableauJSON[objet].specialite)) {
             var texte = "<div class=\"donnees_padding table-row\">";
 
             nombreHosp++;           // on compte le nombre d'hospitalisations pour ce no de dossier
@@ -160,7 +180,13 @@ function afficher_tableau(elem, dossier) {
         cacher_select();
         // afficher le message dans la zone d'état
         status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat + ".";
-    } else {
+    }
+    // ici ???
+        else if(codeEtab != 0) {
+        status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour cette spécialité dans cet établissement.";
+    }
+
+    else {
         status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour ce patient.";
     }
 
@@ -310,7 +336,7 @@ function afficher_patients() {
     var selection = event.target.options[event.target.selectedIndex];
 
     // afficher le tableau hospitalisation pour le patient sélectionné
-    afficher_tableau("hosp", parseInt(selection.id.toString()));
+    afficher_tableau("hosp", parseInt(selection.id.toString()), 0);
 }
 
 // fonction pour traiter Hospitalisations par établissement et par spécialité
@@ -339,20 +365,9 @@ function afficher_specialite() {
     afficheX();
     cacher_footer();
 
-
-/*<section class="button-area">
-        <div class="container border-top-generic">
-        <h3 class="text-heading title_color">Sample Buttons</h3>
-    <div class="button-group-area">
-
-        <a href="#" class="genric-btn info">Info</a>
-        <a href="#" class="genric-btn warning">Warning</a>
-    </div>
-    </div>
-    </section>*/
-
     var infosHopital = document.createElement("div");
     infosHopital.setAttribute("class", "container border-top-generic");
+    infosHopital.setAttribute("id", "infosHopital");
 
     // parcourt le tableau JSON pour afficher les informations de l'hôpital sélectionné dans un premier tableau
     for(var hopital in tabEtablissements) {
@@ -399,7 +414,10 @@ function afficher_specialite() {
             // on injecte le code HTML dans la page ??? fonctionne pas br enlever????
             //rangees.innerHTML += texte + "</div></div>";
             cadre.insertBefore(infosHopital, boutonFermer);
+            //afficher_tableau("hosp_etab", 0, Integer.parseInt(choix_hopital));
+            //afficher_tableau("hosp", 0, Integer.parseInt(choix_hopital));
 
+            /*
             // on ajoute un deuxième tableau on réinitialise la variable pour pouvoir la réutiliser
             texte = "<div class=\"progress-table\">";
             rangees.innerHTML += texte;
@@ -444,10 +462,15 @@ function afficher_specialite() {
                     cacher_select();
                 }
             }
-        }
-    }
+*/        }
 
-    status.innerHTML = nombreHosp;
+    }
+    //afficher_tableau("hosp_spec", 0, parseInt(choix_hopital));
+    //afficher_tableau("hosp_spec", -1, "3980", "médecine");
+    afficher_tableau("hosp_spec", -1, choix_hopital, choix_specialite);
+    infosHopital.style.visibility = "visible";
+    //status.innerHTML = nombreHosp;
+
     // 7306 orthopédie ne s'affiche pas, pourquoi?????
 
     //var rangees = document.getElementById("tableau");
