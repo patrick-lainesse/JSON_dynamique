@@ -66,9 +66,9 @@ Tous les documents provenant du template se retrouvent dans le dossier /template
                 </div>
                 <nav id="nav-menu-container"> <!--barre d'outils-->
                     <ul class="nav-menu">
-                        <li><a href="#" onclick="afficher_tableau(this.id, 0)" id="pati">Liste de patients</a></li>
-                        <li><a href="#" onclick="afficher_tableau(this.id, 0)" id="etab">Liste des établissements</a></li>
-                        <li><a href="#" onclick="afficher_tableau(this.id, 0)" id="hosp">Liste des hospitalisations</a></li>
+                        <li><a href="#" onclick="afficher_tableau(this.id, 0, 0)" id="pati">Liste de patients</a></li>
+                        <li><a href="#" onclick="afficher_tableau(this.id, 0, 0)" id="etab">Liste des établissements</a></li>
+                        <li><a href="#" onclick="afficher_tableau(this.id, 0, 0)" id="hosp">Liste des hospitalisations</a></li>
                         <li><a href="#" onclick="charger_select(this.id)" id="hosp_pati">Hospitalisations<br>par patient</a></li>
                         <li><a href="#" onclick="charger_select(this.id)" id="hosp_etab">Hospitalisations par<br>établissement et par spécialité</a></li>
                     </ul>
@@ -95,7 +95,6 @@ Tous les documents provenant du template se retrouvent dans le dossier /template
             <!--<div class="cache default-select" id="default-select"></div>-->
 
             <!--section zone d'affichage de la page, où s'affichent dynamiquement les tableaux-->
-            <!--??? doit réagir au clic sur X par Javascript?-->
             <div class="section-top-border cache" id="cadre_tableau">
                 <a href="index.html" class="genric-btn boutonX danger-border radius" id="boutonX">X</a>
                 <div class="progress-table-wrap">

@@ -61,6 +61,7 @@ function afficher_tableau(elem, dossier, codeEtab, spec) {
     // on récupère les endroits de la page html où injecter le tableau
     var status = document.getElementById("status");
     var rangees = document.getElementById("tableau");
+    var cadre = document.getElementById("cadre_tableau");   // pour cacher le tableau dans le cas où il n'y a aucun résultat à afficher
     //var etabSpecialite = document.getElementById("infosHopital");
 
     // variable qui va accueillir le tableau correspondant à la sélection sur la page
@@ -97,9 +98,7 @@ function afficher_tableau(elem, dossier, codeEtab, spec) {
             msgEtat = "hospitalisation(s)";
             cacher_etab();
             break;
-// dne fonction ???
         case "hosp_spec":
-            var cadre = document.getElementById("cadre_tableau");
             var boutonFermer = document.getElementById("boutonX");
             tableauJSON = tabHospitalisations;
             msgEtat = "hospitalisation(s)";
@@ -176,14 +175,14 @@ function afficher_tableau(elem, dossier, codeEtab, spec) {
         cacher_select();
         // afficher le message dans la zone d'état
         status.innerHTML = "Il y a " + tableauJSON.length + " " + msgEtat + ".";
-    }
-    // ici ???
-        else if(codeEtab != 0) {
-        status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour cette spécialité dans cet établissement.";
+    } else if(codeEtab != 0) {
+        status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour la spécialité " + spec + " dans cet établissement.";
+    } else {
+        status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour ce patient.";
     }
 
-    else {
-        status.innerHTML = "Il y a " + nombreHosp + " " + msgEtat + " pour ce patient.";
+    if(tableauJSON.length == 0 || nombreHosp ==0) {
+        cadre.style.visibility = "gone";        // ???? ici à régler
     }
 
     status.style.visibility = "visible";
