@@ -4,7 +4,9 @@ Matricule 740302
 IFT 1142, Hiver 2020
 
 scripts.js
-Fonctions utilisées pour remplir la zone affichage de la page web
+Fonctions utilisées pour remplir la zone affichage de la page web.
+Je me suis rajouté une difficulté supplémentaire pour ce projet: adapter les différents éléments d'un style bootstrap
+tout en conservant conserver certaines des fonctions jquery pour animer des transitions.
 */
 
 // fonction qui fait apparaître le "X" pour fermer les tableaux
@@ -62,7 +64,6 @@ function afficher_tableau(elem, dossier, codeEtab, spec) {
     var status = document.getElementById("status");
     var rangees = document.getElementById("tableau");
     var cadre = document.getElementById("cadre_tableau");   // pour cacher le tableau dans le cas où il n'y a aucun résultat à afficher
-    //var etabSpecialite = document.getElementById("infosHopital");
 
     // variable qui va accueillir le tableau correspondant à la sélection sur la page
     var tableauJSON;
@@ -182,7 +183,7 @@ function afficher_tableau(elem, dossier, codeEtab, spec) {
     }
 
     if(tableauJSON.length === 0 || nombreHosp === 0) {
-        cadre.style.visibility = "hidden";        // ???? ici à régler
+        cadre.style.visibility = "hidden";
     }
 
     status.style.visibility = "visible";
@@ -236,20 +237,7 @@ function charger_select(identifiant) {
     // rendre visibles les div où afficher les tableaux s'ils ne l'étaient pas déjà
     status.style.visibility = "visible";
     emplacement.style.visibility = "visible";
-    //emplacement.style.class = "single-element-widget default-select";       // à travailler pour style bootstrap???
     emplacement.setAttribute("class", "default-select");
-
-
-    /*<div class="default-select" id="default-select">      ???
-        <select>
-        <option value="1">English</option>
-        <option value="1">Spanish</option>
-        <option value="1">Arabic</option>
-        <option value="1">Portuguise</option>
-        <option value="1">Bengali</option>
-        </select>
-        </div>*/
-
 
     // cache la section "préparé par" et cache la section des tableaux si elle est visible
     cacher_footer();
@@ -263,7 +251,7 @@ function charger_select(identifiant) {
 
     menu = document.createElement("select");
     menu.setAttribute("id", option_barre_outil);
-    //menu.classList.add("nice-select");        ????
+    menu.setAttribute("class", "select_margin");
 
     switch (option_barre_outil) {
         case "patients":
@@ -338,6 +326,7 @@ function charger_select(identifiant) {
         }
     }
 
+    // fonction de jquery pour faire afficher les select dans le style du template bootstrap
     $('select').niceSelect();
 }
 
@@ -348,12 +337,7 @@ function afficher_patients() {
     var menu_patient = document.getElementById("patients").options;
     var selection = menu_patient[menu_patient.selectedIndex].id;
 
-
-    //var selection = event.target.options[event.target.selectedIndex];
-
-    // afficher le tableau hospitalisation pour le patient sélectionné
-    //afficher_tableau("hosp", parseInt(selection.id.toString()), 0);
-    afficher_tableau("hosp", parseInt(selection.id), 0);    // ????
+    afficher_tableau("hosp", parseInt(selection), 0);
 }
 
 /* Fonction pour traiter Hospitalisations par établissement et par spécialité. Affiche les informations de l'établissement
@@ -381,7 +365,7 @@ function afficher_specialite() {
 
     infosHopital = document.createElement("div");
 
-    infosHopital.setAttribute("class", "container border-top-generic");
+    infosHopital.setAttribute("class", "container border-top-generic infos_margin");
     infosHopital.setAttribute("id", "infosHopital");
 
     cadre.insertBefore(infosHopital, boutonFermer);
@@ -419,6 +403,9 @@ function afficher_specialite() {
                 }
 
                 else {
+                    if (attribut == "etablissement") {
+                        attribut = "établissement";
+                    }
                     uneInfo.innerHTML = majuscule(attribut) + ":<br>" + tabEtablissements[hopital][attribut];
                 }
 
