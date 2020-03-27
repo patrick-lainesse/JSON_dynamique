@@ -31,6 +31,12 @@
     width: 100%;
 }
 
+.lien_inactif {
+    pointer-events: none;
+    cursor: default;
+    color: #FFF;
+}
+
 .rangee_padding {
     padding-left: 5px;
     font-size: 12px;
@@ -44,13 +50,17 @@
     word-wrap: break-word;
 }
 
+.tableau_entete {
+    background: #38a4ff !important;
+}
+
 div.tableau_largeur>div:nth-of-type(even) {
-    color: #FFF;
-    background:#f8b600;
+    background:#FFF;
 }
 
 div.tableau_largeur>div:nth-of-type(odd) {
-    background:#FFF;
+    color: #FFF;
+    background: #a8a8a8;
 }
 
 .hopital_specialite {
